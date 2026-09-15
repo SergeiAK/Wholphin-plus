@@ -65,6 +65,7 @@ fun CollectionFolderViewScope.CollectionFolderGrid(
     gridFocusRequester: FocusRequester,
     cardContent: @Composable CollectionFolderViewScope.(GridItemDetails<BaseItem>) -> Unit,
     modifier: Modifier = Modifier,
+    jumpLetters: String? = null,
     positionCallback: ((columns: Int, position: Int) -> Unit)? = null,
 ) {
     Box(modifier = modifier) {
@@ -95,6 +96,7 @@ fun CollectionFolderViewScope.CollectionFolderGrid(
                 showJumpButtons = false, // TODO add preference
                 showLetterButtons = sortAndDirection.sort == ItemSortBy.SORT_NAME,
                 modifier = Modifier.fillMaxSize(),
+                jumpLetters = jumpLetters,
                 initialPosition = initialPosition,
                 positionCallback = positionCallback,
                 cardContent = { details ->
