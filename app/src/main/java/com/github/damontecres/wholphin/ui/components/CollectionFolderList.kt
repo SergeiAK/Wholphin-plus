@@ -91,6 +91,7 @@ fun CollectionFolderViewScope.CollectionFolderList(
     gridFocusRequester: FocusRequester,
     itemContent: @Composable CollectionFolderViewScope.(GridItemDetails<BaseItem>) -> Unit,
     modifier: Modifier = Modifier,
+    jumpLetters: String? = null,
     positionCallback: ((columns: Int, position: Int) -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -173,21 +174,14 @@ fun CollectionFolderViewScope.CollectionFolderList(
                         .weight(1f)
                         .focusRequester(gridFocusRequester),
             )
-            val letters = stringResource(R.string.jump_letters)
+            val letters = jumpLetters ?: stringResource(R.string.jump_letters)
             // Letters
             val currentLetter =
-                remember(focusedItem) {
+                remember(focusedItem, letters) {
                     focusedItem
                         ?.sortName
                         ?.firstOrNull()
-                        ?.uppercaseChar()
-                        ?.let {
-                            when (it) {
-                                in '0'..'9' -> '#'
-                                in 'A'..'Z' -> it
-                                else -> null
-                            }
-                        }
+                        ?.let { first -> letters.firstOrNull { it.equals(first, ignoreCase = true) } }
                         ?: letters[0]
                 }
             if (showLetterButtons && items.isNotEmpty()) {
