@@ -1,0 +1,85 @@
+name: Debug APK
+
+on:
+  push:
+    branches:
+      - build/dv7-conversion
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs='-Xmx12g -XX:MaxMetaspaceSize=1024m'"
+  BUILD_TOOLS_VERSION: "36.0.0"
+  NDK_VERSION: "29.0.14206865"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0 # Need the tags to build
+      - name: Use the committed debug keystore
+        run: |
+          mkdir -p ~/.android
+          cp .ci/debug.keystore ~/.android/debug.keystore
+      - name: Pre-accept Android SDK licenses
+        # cmdline-tools 20.0 walks the licences interactively, so `sdkmanager --licenses`
+        # dies on an empty stdin. Writing the hashes it looks for leaves it nothing to ask.
+        run: |
+          sdk_root="${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}"
+          mkdir -p "$sdk_root/licenses"
+          cd "$sdk_root/licenses"
+          printf '%s\n' 8933bad161af4178b1185d1a37fbf41ea5269c55 \
+            d56f5187479451eabf01fb78af6dfcb131a6481e \
+            24333f8a63b6825ea9c5514f83c2829b004d1fee > android-sdk-license
+          printf '%s\n' 84831b9409646a918e30573bab4c9c91346d8abd > android-sdk-preview-license
+          printf '%s\n' 601085b94cd77f0b54ff86406957099ebe79c4d6 > android-googletv-license
+          printf '%s\n' 859f317696f67ef3d7f30a50a5560e7834b43903 > android-sdk-arm-dbt-license
+          printf '%s\n' 33b6a2b64607f11b759f320ef9dff4ae5c47d97a > google-gdk-license
+          printf '%s\n' e9acab5b5fbb560a72cfaecce8946896ff6aab9d > mips-android-sysimage-license
+          printf '%s\n' d975f751698a77b662f1254ddbeed3901e976f5a > intel-android-extra-license
+      # Deliberately not ./.github/actions/setup: that one asks for the retired `tools`
+      # package, which sdkmanager can no longer find. Same steps, minus that package.
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.14'
+      # The same first step as upstream's pr.yml: ktlint and the other hooks, before the build
+      - name: Run pre-commit
+        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
+      - name: Setup JDK
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: zulu
+          java-version: '21'
+          cache: 'gradle'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
+        with:
+          packages: "platform-tools build-tools;${{ env.BUILD_TOOLS_VERSION }} ndk;${{ env.NDK_VERSION }}"
+      - name: Add NDK to path
+        run: |
+          ndk_root="${ANDROID_SDK_ROOT}/ndk/${NDK_VERSION}"
+          echo "$ndk_root:$ndk_root/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
+      - name: Unit tests
+        run: ./gradlew testDefaultDebugUnitTest --no-daemon
+      - name: Build app
+        run: ./gradlew assembleDefaultDebug --no-daemon
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: unit-test-results
+          path: app/build/reports/tests/**
+          if-no-files-found: ignore
+      - name: Upload APK
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: wholphin-debug-apk
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
