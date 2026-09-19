@@ -36,7 +36,9 @@ jobs:
         # upstream's own release workflow, which triggers on v* tags.
         run: |
           git remote add upstream https://github.com/damontecres/Wholphin.git || true
-          git fetch --tags --quiet upstream
+          # --force: the fork carries its own copies of some tags and git
+          # refuses to clobber them otherwise
+          git fetch --force --tags --quiet upstream
           git describe --tags --long --match='v*'
       - name: Pre-accept Android SDK licenses
         # cmdline-tools 20.0 walks the licences interactively, so `sdkmanager --licenses`
