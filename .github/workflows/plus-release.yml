@@ -35,10 +35,10 @@ jobs:
         # tags in (rather than pushing them to the fork) also avoids waking
         # upstream's own release workflow, which triggers on v* tags.
         run: |
-          git remote add upstream https://github.com/damontecres/Wholphin.git || true
-          # --force: the fork carries its own copies of some tags and git
-          # refuses to clobber them otherwise
-          git fetch --force --tags --quiet upstream
+          # Fetched by URL on purpose: an `upstream` remote makes the gh CLI
+          # target that repository later on, and the release lands nowhere.
+          # --force because the fork carries its own copies of some tags.
+          git fetch --force --quiet https://github.com/damontecres/Wholphin.git 'refs/tags/*:refs/tags/*'
           git describe --tags --long --match='v*'
       - name: Pre-accept Android SDK licenses
         # cmdline-tools 20.0 walks the licences interactively, so `sdkmanager --licenses`
@@ -112,6 +112,7 @@ jobs:
           version="$(git describe --tags --long --match='v*')"
           echo "Release title: $version"
           gh release create "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
             --latest --title "$version" --verify-tag \
             --notes "Wholphin+ built from ${{ github.sha }}. Signal theme, card progress bar, alphabet bar." \
             release-assets/*
