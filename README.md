@@ -1,6 +1,32 @@
-# Wholphin - an OSS Android TV client for Jellyfin
+# Wholphin+ - a Wholphin fork for daily use
 
 > "Never half-phin two jellies. Always wholphin one jelly."
+
+**This is Wholphin+, a personal fork of [damontecres/Wholphin](https://github.com/damontecres/Wholphin)
+kept in sync with upstream and used day-to-day.** It installs and updates independently of the
+official app — everything else below describes the shared upstream project. What this fork adds
+on top:
+
+- **Signal theme** — a new color theme (green for watched state/progress, orange for focus and
+  technical labels), proposed upstream in [issue #91](https://github.com/damontecres/Wholphin/issues/91)
+- **Redesigned watched-progress bar** on cards — a thin, Plex-style fill instead of the default
+- **Alphabet jump bar shows only letters that actually have items** in the current library/filter,
+  also sent upstream as [PR #1975](https://github.com/damontecres/Wholphin/pull/1975)
+- **Player controls regrouped**: captions/audio/settings live in one row next to the subtitle line
+  above the seek bar, and a d-pad-up press while the controls are hidden focuses that row directly
+  instead of always landing on play/pause
+- **Installs side-by-side with the official app** — separate application ID, its own icon with an
+  accent-colored plus badge so the launcher tells them apart — and **updates from this fork's own
+  [releases](https://github.com/SergeiAK/Wholphin-plus/releases)**, not from upstream or an app store
+
+No separate installation guide here: grab the latest APK for your device from
+[this fork's releases page](https://github.com/SergeiAK/Wholphin-plus/releases/latest) the same
+way the [Installation](#installation) section below describes for upstream, just pointed at this
+repository instead. Issues and pull requests for the shared code belong upstream, at
+[damontecres/Wholphin](https://github.com/damontecres/Wholphin) — this fork does not track its own
+issue tracker.
+
+---
 
 Wholphin is an open-source Android TV client for Jellyfin. It aims to provide a different app UI that's inspired by Plex for users interested in migrating to Jellyfin.
 
