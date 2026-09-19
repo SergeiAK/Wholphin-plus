@@ -87,5 +87,18 @@ fun SwitchColors(): SwitchColors {
                 uncheckedThumbColor = MaterialTheme.colorScheme.onPrimary,
             )
         }
+
+        AppThemeColors.SIGNAL -> {
+            // Only the track changes with the state: the thumb and the outline stay put,
+            // so the control reads as one switch rather than two different widgets.
+            SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                checkedTrackColor = MaterialTheme.colorScheme.tertiary,
+                checkedBorderColor = MaterialTheme.colorScheme.onSurface,
+                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                uncheckedBorderColor = MaterialTheme.colorScheme.onSurface,
+            )
+        }
     }
 }

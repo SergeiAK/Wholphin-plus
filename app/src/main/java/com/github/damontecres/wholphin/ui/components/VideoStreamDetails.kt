@@ -35,6 +35,7 @@ import com.github.damontecres.wholphin.ui.PreviewTvSpec
 import com.github.damontecres.wholphin.ui.playback.audioStreamCount
 import com.github.damontecres.wholphin.ui.playback.embeddedSubtitleCount
 import com.github.damontecres.wholphin.ui.playback.externalSubtitlesCount
+import com.github.damontecres.wholphin.ui.theme.LocalTheme
 import com.github.damontecres.wholphin.ui.theme.WholphinTheme
 import com.github.damontecres.wholphin.ui.util.StreamFormatting.concatWithSpace
 import com.github.damontecres.wholphin.ui.util.StreamFormatting.formatAudioCodec
@@ -171,20 +172,29 @@ fun StreamLabel(
     count: Int = 0,
     disabled: Boolean = false,
 ) {
+    val signal = LocalTheme.current == AppThemeColors.SIGNAL
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         modifier =
             modifier
                 .background(
-                    MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .5f),
-//                    MaterialTheme.colorScheme.surfaceVariant,
+                    if (signal) {
+                        MaterialTheme.colorScheme.surfaceVariant
+                    } else {
+                        MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .5f)
+                    },
                     shape = RoundedCornerShape(4.dp),
                 ).padding(vertical = 4.dp, horizontal = 6.dp),
     ) {
         ProvideTextStyle(
             TextStyle(
-                color = MaterialTheme.colorScheme.onSurface,
+                color =
+                    if (signal) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
             ),

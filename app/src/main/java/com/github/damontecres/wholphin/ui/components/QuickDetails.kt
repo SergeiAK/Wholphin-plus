@@ -1,7 +1,10 @@
 package com.github.damontecres.wholphin.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -19,14 +22,17 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.data.model.QuickDetailsData
+import com.github.damontecres.wholphin.preferences.AppThemeColors
 import com.github.damontecres.wholphin.preferences.DisplayToggle
 import com.github.damontecres.wholphin.ui.dot
 import com.github.damontecres.wholphin.ui.formatTime
+import com.github.damontecres.wholphin.ui.theme.LocalTheme
 import com.github.damontecres.wholphin.ui.util.LocalClock
 import com.github.damontecres.wholphin.ui.util.LocalInterfaceCustomization
 import org.jellyfin.sdk.model.DateTime
@@ -46,7 +52,11 @@ fun QuickDetails(
         if (details != null) {
             QuickDetailsText(details.basic, Modifier, textStyle, inlineContentMap)
             if (DisplayToggle.OFFICIAL_RATING in enabled) {
-                QuickDetailsText(details.officialRating, Modifier, textStyle, inlineContentMap)
+                if (LocalTheme.current == AppThemeColors.SIGNAL) {
+                    OfficialRatingBadge(details.officialRating?.text, textStyle)
+                } else {
+                    QuickDetailsText(details.officialRating, Modifier, textStyle, inlineContentMap)
+                }
             }
             if (DisplayToggle.COMMUNITY_RATING in enabled) {
                 QuickDetailsText(details.communityRating, Modifier, textStyle, inlineContentMap)
@@ -61,6 +71,32 @@ fun QuickDetails(
             EndsAt(endsAt, textStyle = textStyle)
         }
     }
+}
+
+/**
+ * The age rating on a plate of its own.
+ *
+ * Upstream folds it into the dotted metadata line; a certificate is a label, not prose,
+ * and reads better boxed. The separator the string carries is dropped along the way.
+ */
+@Composable
+private fun OfficialRatingBadge(
+    rating: String?,
+    textStyle: TextStyle,
+) = rating?.trim(' ', '\u2022')?.takeIf { it.isNotBlank() }?.let {
+    Text(
+        text = it,
+        color = MaterialTheme.colorScheme.onSurface,
+        style = textStyle,
+        maxLines = 1,
+        modifier =
+            Modifier
+                .padding(horizontal = 8.dp)
+                .background(
+                    MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(4.dp),
+                ).padding(horizontal = 6.dp, vertical = 1.dp),
+    )
 }
 
 @NonRestartableComposable
