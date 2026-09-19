@@ -13,6 +13,7 @@ import com.github.damontecres.wholphin.ui.theme.colors.OledThemeColors
 import com.github.damontecres.wholphin.ui.theme.colors.OrangeThemeColors
 import com.github.damontecres.wholphin.ui.theme.colors.PurpleThemeColors
 import com.github.damontecres.wholphin.ui.theme.colors.RedThemeColors
+import com.github.damontecres.wholphin.ui.theme.colors.SignalThemeColors
 
 val LocalTheme =
     compositionLocalOf<AppThemeColors> { AppThemeColors.PURPLE }
@@ -27,6 +28,7 @@ fun getThemeColors(appThemeColors: AppThemeColors): ThemeColors =
         AppThemeColors.BOLD_BLUE -> BoldBlueThemeColors
         AppThemeColors.RED -> RedThemeColors
         AppThemeColors.BROWN -> BrownThemeColors
+        AppThemeColors.SIGNAL -> SignalThemeColors
         AppThemeColors.UNRECOGNIZED -> PurpleThemeColors
     }
 
