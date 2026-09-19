@@ -102,6 +102,8 @@ configure<ApplicationExtension> {
 
     buildTypes {
         release {
+            // Installs alongside the official app instead of replacing it
+            applicationIdSuffix = ".plus"
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
