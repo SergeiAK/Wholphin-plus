@@ -19,6 +19,14 @@ on top:
   accent-colored plus badge so the launcher tells them apart — and **updates from this fork's own
   [releases](https://github.com/SergeiAK/Wholphin-plus/releases)**, not from upstream or an app store
 
+<p align="center">
+<img src="media/wholphin-plus/home.jpg" width="49%" alt="Home page in the Signal theme"/>
+<img src="media/wholphin-plus/movie-detail.jpg" width="49%" alt="Movie page in the Signal theme"/>
+<br/>
+<img src="media/wholphin-plus/player-controls.png" width="49%" alt="Regrouped player controls, focused on captions after a d-pad-up press"/>
+<img src="media/wholphin-plus/settings.png" width="49%" alt="Settings page showing the Signal theme's orange sliders and green switch together"/>
+</p>
+
 No separate installation guide here: grab the latest APK for your device from
 [this fork's releases page](https://github.com/SergeiAK/Wholphin-plus/releases/latest) the same
 way the [Installation](#installation) section below describes for upstream, just pointed at this
