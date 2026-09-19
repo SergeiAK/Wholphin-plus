@@ -29,6 +29,15 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0 # Need the tags to build
+      - name: Fetch upstream tags
+        # The fork does not carry upstream's release tags, so `git describe` here
+        # would name the build after whatever old tag it can reach. Pulling the
+        # tags in (rather than pushing them to the fork) also avoids waking
+        # upstream's own release workflow, which triggers on v* tags.
+        run: |
+          git remote add upstream https://github.com/damontecres/Wholphin.git || true
+          git fetch --tags --quiet upstream
+          git describe --tags --long --match='v*'
       - name: Pre-accept Android SDK licenses
         # cmdline-tools 20.0 walks the licences interactively, so `sdkmanager --licenses`
         # dies on an empty stdin. Writing the hashes it looks for leaves it nothing to ask.
