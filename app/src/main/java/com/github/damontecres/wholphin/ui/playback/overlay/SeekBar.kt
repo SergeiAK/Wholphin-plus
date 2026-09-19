@@ -45,10 +45,12 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
+import com.github.damontecres.wholphin.preferences.AppThemeColors
 import com.github.damontecres.wholphin.ui.playback.ControllerViewState
 import com.github.damontecres.wholphin.ui.playback.calculateSeekAccelerationMultiplier
 import com.github.damontecres.wholphin.ui.playback.isDpadLeft
 import com.github.damontecres.wholphin.ui.playback.isDpadRight
+import com.github.damontecres.wholphin.ui.theme.LocalTheme
 import kotlinx.coroutines.FlowPreview
 import timber.log.Timber
 import kotlin.time.Duration
@@ -200,7 +202,12 @@ private fun SeekBarDisplay(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    val color = MaterialTheme.colorScheme.border
+    val color =
+        if (LocalTheme.current == AppThemeColors.SIGNAL) {
+            MaterialTheme.colorScheme.tertiary
+        } else {
+            MaterialTheme.colorScheme.border
+        }
     val onSurface = MaterialTheme.colorScheme.onSurface
 
     val isFocused by interactionSource.collectIsFocusedAsState()

@@ -611,6 +611,7 @@
     <string name="bold_blue">Bold Blue</string>
     <string name="black">Black</string>
     <string name="brown">Brown</string>
+    <string name="signal">Signal</string>
     <string-array name="app_theme_colors">
         <item>@string/purple</item>
         <item>@string/blue</item>
@@ -620,6 +621,7 @@
         <item>@string/black</item>
         <item>@string/red</item>
         <item>@string/brown</item>
+        <item>@string/signal</item>
     </string-array>
 
     <string name="skip_ignore">Ignore</string>

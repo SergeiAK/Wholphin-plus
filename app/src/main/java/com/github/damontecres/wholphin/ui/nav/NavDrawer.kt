@@ -764,6 +764,14 @@ fun navItemColor(
                 selected && !drawerOpen -> .5f
                 else -> .2f
             }
+        // Signal keeps the accent for focus alone: the selected section is a
+        // "you are here" marker, and white says that without competing with the accent.
+        val selectedColor =
+            if (theme == AppThemeColors.SIGNAL) {
+                MaterialTheme.colorScheme.onSurface
+            } else {
+                MaterialTheme.colorScheme.border
+            }
         return when {
             selected && focused -> {
                 when (theme) {
@@ -774,7 +782,8 @@ fun navItemColor(
                     AppThemeColors.ORANGE,
                     AppThemeColors.RED,
                     AppThemeColors.BROWN,
-                    -> MaterialTheme.colorScheme.border
+                    AppThemeColors.SIGNAL,
+                    -> selectedColor
 
                     AppThemeColors.BOLD_BLUE,
                     AppThemeColors.OLED_BLACK,
@@ -783,7 +792,7 @@ fun navItemColor(
             }
 
             selected -> {
-                MaterialTheme.colorScheme.border
+                selectedColor
             }
 
             focused -> {

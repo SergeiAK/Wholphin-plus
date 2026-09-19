@@ -33,9 +33,11 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.data.model.BaseItem
+import com.github.damontecres.wholphin.preferences.AppThemeColors
 import com.github.damontecres.wholphin.ui.formatTime
 import com.github.damontecres.wholphin.ui.playback.ControllerViewState
 import com.github.damontecres.wholphin.ui.playback.PlaybackDialogType
+import com.github.damontecres.wholphin.ui.theme.LocalTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import org.jellyfin.sdk.model.api.MediaSegmentDto
@@ -216,7 +218,13 @@ fun Controller(
                 }
                 Text(
                     text = stringResource(R.string.ends_at, endTimeStr),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    // Same family as the position and remaining labels below the seek bar.
+                    color =
+                        if (LocalTheme.current == AppThemeColors.SIGNAL) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
                     style = MaterialTheme.typography.labelLarge,
                     modifier =
                         Modifier
