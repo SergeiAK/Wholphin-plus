@@ -144,6 +144,7 @@ fun PlaybackControls(
     skipBackOnResume: Duration?,
     seekForward: Duration,
     currentSegment: MediaSegmentDto?,
+    endTimeText: String?,
     modifier: Modifier = Modifier,
     initialFocusRequester: FocusRequester = remember { FocusRequester() },
     seekBarInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -157,11 +158,8 @@ fun PlaybackControls(
         }
         controllerViewState.pulseControls()
     }
-    LaunchedEffect(controllerViewState.controlsVisible) {
-        if (controllerViewState.controlsVisible) {
-            initialFocusRequester.tryRequestFocus()
-        }
-    }
+    // Which of this row's buttons (if any) gets initial focus when the controller is revealed
+    // is decided by the caller (see Controller's use of initialFocusRequester / FocusOnShow).
     Column(
         modifier = modifier.bringIntoViewRequester(bringIntoViewRequester),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -187,12 +185,6 @@ fun PlaybackControls(
                     .padding(horizontal = 8.dp)
                     .fillMaxWidth(),
         ) {
-            LeftPlaybackButtons(
-                onControllerInteraction = onControllerInteraction,
-                onClickPlaybackDialogType = onClickPlaybackDialogType,
-                modifier = Modifier.align(Alignment.CenterStart),
-            )
-
             PlaybackButtons(
                 player = player,
                 initialFocusRequester = initialFocusRequester,
@@ -209,6 +201,7 @@ fun PlaybackControls(
 
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 currentSegment?.let { segment ->
                     TextButton(
@@ -222,11 +215,19 @@ fun PlaybackControls(
                                 .padding(end = 32.dp),
                     )
                 }
-                RightPlaybackButtons(
-                    onControllerInteraction = onControllerInteraction,
-                    onClickPlaybackDialogType = onClickPlaybackDialogType,
-                    modifier = Modifier,
-                )
+                endTimeText?.let {
+                    Text(
+                        text = it,
+                        color =
+                            if (LocalTheme.current == AppThemeColors.SIGNAL) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurface
+                            },
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(end = 32.dp),
+                    )
+                }
             }
         }
     }
@@ -334,34 +335,18 @@ fun SeekTimecodes(
 
 val buttonSpacing = 12.dp
 
+/**
+ * Captions, audio and settings buttons shown next to the subtitle/end-time line, above the seek bar.
+ *
+ * Captions is first so an "up" press that reveals the controller can focus it directly
+ * (see [FocusOnShow]), rather than always landing on play/pause.
+ */
 @Composable
-fun LeftPlaybackButtons(
+fun TopPlaybackButtons(
     onControllerInteraction: () -> Unit,
     onClickPlaybackDialogType: (PlaybackDialogType) -> Unit,
     modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.focusGroup(),
-        horizontalArrangement = Arrangement.spacedBy(buttonSpacing),
-    ) {
-        PlaybackButton(
-            iconRes = R.drawable.vector_settings,
-            onClick = {
-                onControllerInteraction.invoke()
-                onClickPlaybackDialogType.invoke(PlaybackDialogType.SETTINGS)
-            },
-            enabled = true,
-            onControllerInteraction = onControllerInteraction,
-            modifier = Modifier,
-        )
-    }
-}
-
-@Composable
-fun RightPlaybackButtons(
-    onControllerInteraction: () -> Unit,
-    onClickPlaybackDialogType: (PlaybackDialogType) -> Unit,
-    modifier: Modifier = Modifier,
+    initialFocusRequester: FocusRequester = remember { FocusRequester() },
 ) {
     Row(
         modifier = modifier.focusGroup(),
@@ -376,7 +361,7 @@ fun RightPlaybackButtons(
                 onClickPlaybackDialogType.invoke(PlaybackDialogType.CAPTIONS)
             },
             onControllerInteraction = onControllerInteraction,
-            modifier = Modifier,
+            modifier = Modifier.focusRequester(initialFocusRequester),
         )
         // Audio
         PlaybackFaButton(
@@ -385,6 +370,17 @@ fun RightPlaybackButtons(
             onClick = {
                 onControllerInteraction.invoke()
                 onClickPlaybackDialogType.invoke(PlaybackDialogType.AUDIO)
+            },
+            onControllerInteraction = onControllerInteraction,
+            modifier = Modifier,
+        )
+        // Settings
+        PlaybackButton(
+            enabled = true,
+            iconRes = R.drawable.vector_settings,
+            onClick = {
+                onControllerInteraction.invoke()
+                onClickPlaybackDialogType.invoke(PlaybackDialogType.SETTINGS)
             },
             onControllerInteraction = onControllerInteraction,
             modifier = Modifier,

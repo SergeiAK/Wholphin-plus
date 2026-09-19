@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -33,11 +34,11 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.data.model.BaseItem
-import com.github.damontecres.wholphin.preferences.AppThemeColors
 import com.github.damontecres.wholphin.ui.formatTime
 import com.github.damontecres.wholphin.ui.playback.ControllerViewState
+import com.github.damontecres.wholphin.ui.playback.FocusOnShow
 import com.github.damontecres.wholphin.ui.playback.PlaybackDialogType
-import com.github.damontecres.wholphin.ui.theme.LocalTheme
+import com.github.damontecres.wholphin.ui.tryRequestFocus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import org.jellyfin.sdk.model.api.MediaSegmentDto
@@ -163,6 +164,17 @@ fun Controller(
             ),
     )
 
+    val centerFocusRequester = remember { FocusRequester() }
+    val topRowFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(controllerViewState.controlsVisible) {
+        if (controllerViewState.controlsVisible) {
+            when (controllerViewState.focusOnShow) {
+                FocusOnShow.TOP -> topRowFocusRequester.tryRequestFocus()
+                FocusOnShow.CENTER -> centerFocusRequester.tryRequestFocus()
+            }
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier,
@@ -186,6 +198,7 @@ fun Controller(
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -202,34 +215,25 @@ fun Controller(
                     )
                 }
 
-                val context = LocalContext.current
-                var endTimeStr by remember { mutableStateOf("...") }
-                LaunchedEffect(player, context) {
-                    while (isActive) {
-                        val remaining =
-                            (player.duration - player.currentPosition)
-                                .div(player.playbackParameters.speed)
-                                .toLong()
-                                .milliseconds
-                        val endTime = LocalTime.now().plusSeconds(remaining.inWholeSeconds)
-                        endTimeStr = formatTime(context, endTime)
-                        delay(1.seconds)
-                    }
-                }
-                Text(
-                    text = stringResource(R.string.ends_at, endTimeStr),
-                    // Same family as the position and remaining labels below the seek bar.
-                    color =
-                        if (LocalTheme.current == AppThemeColors.SIGNAL) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface
-                        },
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier =
-                        Modifier
-                            .padding(end = 32.dp),
+                TopPlaybackButtons(
+                    onControllerInteraction = { controllerViewState.pulseControls() },
+                    onClickPlaybackDialogType = onClickPlaybackDialogType,
+                    initialFocusRequester = topRowFocusRequester,
                 )
+            }
+        }
+        val context = LocalContext.current
+        var endTimeStr by remember { mutableStateOf("...") }
+        LaunchedEffect(player, context) {
+            while (isActive) {
+                val remaining =
+                    (player.duration - player.currentPosition)
+                        .div(player.playbackParameters.speed)
+                        .toLong()
+                        .milliseconds
+                val endTime = LocalTime.now().plusSeconds(remaining.inWholeSeconds)
+                endTimeStr = formatTime(context, endTime)
+                delay(1.seconds)
             }
         }
         PlaybackControls(
@@ -244,12 +248,14 @@ fun Controller(
             previousEnabled = previousEnabled,
             nextEnabled = nextEnabled,
             seekEnabled = seekEnabled,
+            initialFocusRequester = centerFocusRequester,
             seekBarInteractionSource = seekBarInteractionSource,
             seekBarIntervals = 16,
             seekBack = seekBack,
             seekForward = seekForward,
             skipBackOnResume = skipBackOnResume,
             currentSegment = currentSegment,
+            endTimeText = stringResource(R.string.ends_at, endTimeStr),
             onClickPlaybackDialogType = onClickPlaybackDialogType,
         )
     }
