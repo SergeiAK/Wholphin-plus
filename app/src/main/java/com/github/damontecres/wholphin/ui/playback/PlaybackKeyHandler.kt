@@ -69,7 +69,7 @@ class PlaybackKeyHandler(
                         }
                     }
                 } else {
-                    controllerViewState.showControls()
+                    controllerViewState.showControls(focus = if (isUp(it)) FocusOnShow.TOP else FocusOnShow.CENTER)
                 }
             } else {
                 // When controller is visible, its buttons will handle pulsing
