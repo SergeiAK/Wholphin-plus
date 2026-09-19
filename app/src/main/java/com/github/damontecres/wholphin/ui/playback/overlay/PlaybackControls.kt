@@ -307,10 +307,16 @@ fun SeekTimecodes(
                 remember(positionSec) { resources.formatDuration(positionSec.seconds) }
             val remainingText =
                 remember(remainingSec) { "-${resources.formatDuration(remainingSec.seconds)}" }
+            val timeColor =
+                if (LocalTheme.current == AppThemeColors.SIGNAL) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
             CompositionLocalProvider(LocalLayoutDirection provides currentLayoutDirection) {
                 Text(
                     text = positionText,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = timeColor,
                     style = MaterialTheme.typography.labelLarge,
                     modifier =
                         Modifier
@@ -320,7 +326,7 @@ fun SeekTimecodes(
             CompositionLocalProvider(LocalLayoutDirection provides currentLayoutDirection) {
                 Text(
                     text = remainingText,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = timeColor,
                     style = MaterialTheme.typography.labelLarge,
                     modifier =
                         Modifier
@@ -474,7 +480,15 @@ fun PlaybackButton(
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
 ) {
-    val selectedColor = MaterialTheme.colorScheme.border
+    val signal = LocalTheme.current == AppThemeColors.SIGNAL
+    // The accent already carries focus everywhere else; next to the green progress bar
+    // an amber pause button is one colour too many, so focus here is plain white.
+    val selectedColor =
+        if (signal) {
+            MaterialTheme.colorScheme.onSurface
+        } else {
+            MaterialTheme.colorScheme.border
+        }
     Button(
         enabled = enabled,
         onClick = onClick,
@@ -483,6 +497,12 @@ fun PlaybackButton(
             ClickableSurfaceDefaults.colors(
                 containerColor = AppColors.TransparentBlack25,
                 focusedContainerColor = selectedColor,
+                focusedContentColor =
+                    if (signal) {
+                        MaterialTheme.colorScheme.surface
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
             ),
         contentPadding = PaddingValues(4.dp),
         interactionSource = interactionSource,
@@ -496,7 +516,7 @@ fun PlaybackButton(
             painter = painterResource(iconRes),
             contentDescription = "",
             tint =
-                if (LocalTheme.current == AppThemeColors.OLED_BLACK) {
+                if (LocalTheme.current == AppThemeColors.OLED_BLACK || signal) {
                     LocalContentColor.current
                 } else {
                     MaterialTheme.colorScheme.onSurface
@@ -515,7 +535,15 @@ fun PlaybackFaButton(
     interactionSource: MutableInteractionSource? = null,
     textColor: Color = Color.Unspecified,
 ) {
-    val selectedColor = MaterialTheme.colorScheme.border
+    val signal = LocalTheme.current == AppThemeColors.SIGNAL
+    // The accent already carries focus everywhere else; next to the green progress bar
+    // an amber pause button is one colour too many, so focus here is plain white.
+    val selectedColor =
+        if (signal) {
+            MaterialTheme.colorScheme.onSurface
+        } else {
+            MaterialTheme.colorScheme.border
+        }
     Button(
         enabled = enabled,
         onClick = onClick,
@@ -524,6 +552,12 @@ fun PlaybackFaButton(
             ClickableSurfaceDefaults.colors(
                 containerColor = AppColors.TransparentBlack25,
                 focusedContainerColor = selectedColor,
+                focusedContentColor =
+                    if (signal) {
+                        MaterialTheme.colorScheme.surface
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
             ),
         contentPadding = PaddingValues(4.dp),
         interactionSource = interactionSource,
@@ -540,7 +574,7 @@ fun PlaybackFaButton(
             color =
                 if (textColor.isSpecified) {
                     textColor
-                } else if (LocalTheme.current == AppThemeColors.OLED_BLACK) {
+                } else if (LocalTheme.current == AppThemeColors.OLED_BLACK || signal) {
                     LocalContentColor.current
                 } else {
                     MaterialTheme.colorScheme.onSurface
