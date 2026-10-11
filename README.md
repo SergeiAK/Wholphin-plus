@@ -9,7 +9,15 @@ on top:
 
 - **Signal theme** — a new color theme (green for watched state/progress, orange for focus and
   technical labels), proposed upstream in [issue #91](https://github.com/damontecres/Wholphin/issues/91)
-- **Redesigned watched-progress bar** on cards — a thin, Plex-style fill instead of the default
+- **Redesigned watched-progress bar** on cards — a thin, Plex-style fill over a dark track, colored
+  like the watched badge, proposed upstream in [issue #1989](https://github.com/damontecres/Wholphin/issues/1989)
+- **Dolby Vision Profile 7 → 8.1 conversion** (experimental setting, off by default) — dual-layer
+  Profile 7 rips direct play as Dolby Vision on devices whose decoder only lists Profile 8, sent
+  upstream as [PR #2017](https://github.com/damontecres/Wholphin/pull/2017)
+- **Direct play for out-of-spec Dolby Vision** (experimental setting, off by default) — files the
+  server tags `DOVIInvalid` play directly instead of being transcoded, on devices with a Dolby Vision
+  decoder, sent upstream as [PR #2065](https://github.com/damontecres/Wholphin/pull/2065)
+- **Built on upstream `main`**, not only on its last release, so fixes merged since then are included
 - **Alphabet jump bar shows only letters that actually have items** in the current library/filter,
   also sent upstream as [PR #1975](https://github.com/damontecres/Wholphin/pull/1975)
 - **Player controls regrouped**: captions/audio/settings live in one row next to the subtitle line
