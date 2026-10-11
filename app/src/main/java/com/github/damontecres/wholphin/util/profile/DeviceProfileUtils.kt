@@ -75,6 +75,7 @@ fun createDeviceProfile(
     decodeAv1: Boolean,
     jellyfinTenEleven: Boolean,
     preferAc3ForSurround: Boolean,
+    directPlayInvalidDolbyVision: Boolean,
     maxResolution: Int,
 ) = buildDeviceProfile {
     val allowedAudioCodecs =
@@ -470,7 +471,7 @@ fun createDeviceProfile(
     // TODO Use VideoRangeType enum with Jellyfin 10.11 based SDK
     val unsupportedRangeTypesAv1 =
         buildSet {
-            if (jellyfinTenEleven) add("DOVIInvalid")
+            if (jellyfinTenEleven && !(directPlayInvalidDolbyVision && supportsAV1DolbyVision)) add("DOVIInvalid")
 
             if (!decodeAv1) {
                 if (!supportsAV1DolbyVision) {
@@ -490,7 +491,7 @@ fun createDeviceProfile(
     // TODO Use VideoRangeType enum with Jellyfin 10.11 based SDK
     val unsupportedRangeTypesHevc =
         buildSet {
-            if (jellyfinTenEleven) add("DOVIInvalid")
+            if (jellyfinTenEleven && !(directPlayInvalidDolbyVision && supportsHevcDolbyVision)) add("DOVIInvalid")
 
             if (!supportsHevcDolbyVisionEL) {
                 if (!dolbyVisionELDirectPlay) {
