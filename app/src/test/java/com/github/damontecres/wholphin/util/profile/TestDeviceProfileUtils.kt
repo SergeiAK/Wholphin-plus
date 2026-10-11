@@ -46,6 +46,7 @@ class TestDeviceProfileUtils {
             decodeAv1 = decodeAv1,
             jellyfinTenEleven = jellyfinTenEleven,
             preferAc3ForSurround = false,
+            directPlayInvalidDolbyVision = false,
             forceEnabledHdr = forceEnabledHdr,
             forceDisabledHdr = forceDisabledHdr,
             maxResolution = 0,
