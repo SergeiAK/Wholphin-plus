@@ -67,9 +67,22 @@ jobs:
           ndk_root="${ANDROID_SDK_ROOT}/ndk/${NDK_VERSION}"
           echo "$ndk_root:$ndk_root/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
       - name: Unit tests
+        env:
+          ORG_GRADLE_PROJECT_WholphinExtensionsUsername: "${{ secrets.EXTENSIONS_USERNAME }}"
+          ORG_GRADLE_PROJECT_WholphinExtensionsPassword: "${{ secrets.EXTENSIONS_PASSWORD }}"
         run: ./gradlew testDefaultDebugUnitTest --no-daemon
       - name: Build app
+        env:
+          ORG_GRADLE_PROJECT_WholphinExtensionsUsername: "${{ secrets.EXTENSIONS_USERNAME }}"
+          ORG_GRADLE_PROJECT_WholphinExtensionsPassword: "${{ secrets.EXTENSIONS_PASSWORD }}"
         run: ./gradlew assembleDefaultDebug --no-daemon
+      # Without the ffmpeg extension, audio such as TrueHD or DTS fails direct play and the
+      # server falls back to a full SDR transcode, so a test build must not ship without it
+      - name: Check ffmpeg decoder is bundled
+        run: |
+          for apk in app/build/outputs/apk/default/debug/*.apk; do
+            unzip -l "$apk" | grep -q 'libffmpegJNI.so' || { echo "::error::ffmpeg decoder missing in $apk"; exit 1; }
+          done
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
