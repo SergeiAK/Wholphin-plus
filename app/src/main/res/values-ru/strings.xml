@@ -237,6 +237,8 @@
     <string name="confirm_pin">Подтвердите ПИН-код</string>
     <string name="incorrect">Неверно</string>
     <string name="view_options">Параметры отображения</string>
+    <string name="show_as_grid">Показать сеткой</string>
+    <string name="show_as_list">Показать списком</string>
     <string name="columns">Колонки</string>
     <string name="subtitle_style">Стиль субтитров</string>
     <string name="background_color">Цвет фона</string>

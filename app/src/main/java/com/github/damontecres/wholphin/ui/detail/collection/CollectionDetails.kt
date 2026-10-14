@@ -64,6 +64,7 @@ fun CollectionDetails(
     preferences: UserPreferences,
     itemId: UUID,
     modifier: Modifier = Modifier,
+    onClickShowAsList: (() -> Unit)? = null,
     viewModel: CollectionViewModel =
         hiltViewModel<CollectionViewModel, CollectionViewModel.Factory>(
             creationCallback = { it.create(itemId) },
@@ -182,6 +183,7 @@ fun CollectionDetails(
                 getPossibleFilterValues = viewModel::getPossibleFilterValues,
                 letterPosition = viewModel::letterPosition,
                 onClickViewOptions = onClickViewOptions,
+                onClickShowAsList = onClickShowAsList,
                 modifier = modifier,
                 overviewOnClick = {
                     val collection = state.collection!!
@@ -298,6 +300,7 @@ fun CollectionDetailsContent(
     canDelete: Boolean,
     moreOnClick: () -> Unit,
     modifier: Modifier,
+    onClickShowAsList: (() -> Unit)? = null,
 ) {
     var itemsContentHasFocus by rememberSaveable { mutableStateOf(false) }
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
@@ -393,6 +396,7 @@ fun CollectionDetailsContent(
                             onFilterChange = onFilterChange,
                             getPossibleFilterValues = getPossibleFilterValues,
                             onClickViewOptions = onClickViewOptions,
+                            onClickShowAsList = onClickShowAsList,
                             favoriteOnClick = favoriteOnClick,
                             onConfirmDelete = onConfirmDelete,
                             canDelete = canDelete,

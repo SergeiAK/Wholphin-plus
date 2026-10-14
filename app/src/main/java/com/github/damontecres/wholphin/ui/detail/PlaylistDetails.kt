@@ -278,6 +278,8 @@ class PlaylistViewModel
                             parentId = itemId,
                             userId = user.id,
                             fields = SlimItemFields,
+                            // Otherwise the server may group the movies into their box sets
+                            collapseBoxSetItems = false,
                             sortBy = listOf(sortAndDirection.sort),
                             sortOrder = listOf(sortAndDirection.direction),
                         ),
@@ -456,6 +458,7 @@ fun PlaylistDetails(
     preferences: UserPreferences,
     destination: Destination.MediaItem,
     modifier: Modifier = Modifier,
+    onClickShowAsGrid: (() -> Unit)? = null,
     viewModel: PlaylistViewModel =
         hiltViewModel<PlaylistViewModel, PlaylistViewModel.Factory>(
             creationCallback = { it.create(destination.itemId) },
@@ -584,6 +587,7 @@ fun PlaylistDetails(
         getPossibleFilterValues = viewModel::getFilterOptionValues,
         canEdit = state.canEdit,
         onMoveItem = viewModel::onMoveItem,
+        onClickShowAsGrid = onClickShowAsGrid,
         modifier = modifier,
     )
     showContextMenu?.let { contextMenu ->
@@ -636,6 +640,7 @@ fun PlaylistDetailsContent(
     loadingState: LoadingState,
     canEdit: Boolean,
     modifier: Modifier = Modifier,
+    onClickShowAsGrid: (() -> Unit)? = null,
 ) {
     var savedIndex by rememberSaveable { mutableIntStateOf(0) }
     var focusedIndex by remember { mutableIntStateOf(savedIndex) }
@@ -683,6 +688,7 @@ fun PlaylistDetailsContent(
                     onFilterAndSortChange = onFilterAndSortChange,
                     getPossibleFilterValues = getPossibleFilterValues,
                     filterOptions = DefaultPlaylistItemsOptions,
+                    onClickShowAsGrid = onClickShowAsGrid,
                     modifier =
                         Modifier
                             .padding(top = 80.dp)
@@ -737,6 +743,7 @@ fun PlaylistDetailsHeader(
     onFilterAndSortChange: (GetItemsFilter, SortAndDirection) -> Unit,
     getPossibleFilterValues: suspend (ItemFilterBy<*>) -> List<FilterValueOption>,
     modifier: Modifier = Modifier,
+    onClickShowAsGrid: (() -> Unit)? = null,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -758,6 +765,13 @@ fun PlaylistDetailsHeader(
                 iconStringRes = R.string.fa_shuffle,
                 onClick = { onClickPlay.invoke(true) },
             )
+            if (onClickShowAsGrid != null) {
+                ExpandableFaButton(
+                    title = R.string.show_as_grid,
+                    iconStringRes = R.string.fa_images,
+                    onClick = onClickShowAsGrid,
+                )
+            }
         }
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
