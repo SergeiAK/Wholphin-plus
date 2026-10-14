@@ -63,6 +63,7 @@ fun BannerCard(
     cardHeight: Dp = 120.dp,
     aspectRatio: Float = AspectRatios.WIDE,
     interactionSource: MutableInteractionSource? = null,
+    numberOfVersions: Int = item?.data?.mediaSourceCount ?: 0,
     imageType: ImageType = ImageType.PRIMARY,
     imageContentScale: ContentScale = ContentScale.FillBounds,
     useSeriesForPrimary: Boolean = true,
@@ -153,17 +154,28 @@ fun BannerCard(
                     }
                 }
             }
-            if (favorite) {
-                Text(
+            if (favorite || numberOfVersions > 1) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier =
                         Modifier
                             .align(Alignment.TopStart)
-                            .padding(8.dp),
-                    color = colorResource(android.R.color.holo_red_light),
-                    text = stringResource(R.string.fa_heart),
-                    fontSize = 16.sp,
-                    fontFamily = FontAwesome,
-                )
+                            .padding(4.dp),
+                ) {
+                    if (numberOfVersions > 1) {
+                        VersionsBadge(numberOfVersions, MaterialTheme.typography.bodySmall)
+                    }
+                    if (favorite) {
+                        Text(
+                            modifier = Modifier.padding(4.dp),
+                            color = colorResource(android.R.color.holo_red_light),
+                            text = stringResource(R.string.fa_heart),
+                            fontSize = 16.sp,
+                            fontFamily = FontAwesome,
+                        )
+                    }
+                }
             }
             if (playPercent > 0 && playPercent < 100) {
                 PlayedPercentBar(
