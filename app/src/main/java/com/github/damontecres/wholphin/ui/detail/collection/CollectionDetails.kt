@@ -105,6 +105,9 @@ fun CollectionDetails(
             onClearChosenStreams = {
                 // Not supported on this page
             },
+            onRemoveFromPlaylist = { _, itemId ->
+                viewModel.removeFromPlaylist(itemId, position)
+            },
         )
 
     // Actions
@@ -126,6 +129,7 @@ fun CollectionDetails(
                         canRemoveContinueWatching = false,
                         canRemoveNextUp = false,
                         actions = contextActionsFor(position),
+                        showRemoveFromPlaylist = state.canEditPlaylist,
                     )
             }
         }

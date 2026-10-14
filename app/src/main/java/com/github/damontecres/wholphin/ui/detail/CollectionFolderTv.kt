@@ -27,6 +27,7 @@ import com.github.damontecres.wholphin.ui.components.TabDetails
 import com.github.damontecres.wholphin.ui.components.TabbedPage
 import com.github.damontecres.wholphin.ui.components.ViewOptionsPoster
 import com.github.damontecres.wholphin.ui.data.SeriesSortOptions
+import com.github.damontecres.wholphin.ui.data.VideoSortOptions
 import com.github.damontecres.wholphin.ui.nav.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.jellyfin.sdk.model.api.BaseItemKind
@@ -54,6 +55,7 @@ fun CollectionFolderTv(
                 TabDetails(R.string.library),
                 TabDetails(R.string.genres),
                 TabDetails(R.string.studios),
+                TabDetails(R.string.playlists),
             )
         }
     val onClickItem =
@@ -139,6 +141,36 @@ fun CollectionFolderTv(
                         Modifier
                             .fillMaxSize()
                             .focusRequester(tabDetails.contentFocusRequester),
+                )
+            }
+
+            // Playlists, the server returns those with items in this library
+            4 -> {
+                CollectionFolderView(
+                    preferences = preferences,
+                    itemId = destination.itemId,
+                    viewModelKey = "${destination.itemId}_playlist",
+                    initialFilter =
+                        CollectionFolderFilter(
+                            filter =
+                                GetItemsFilter(
+                                    includeItemTypes = listOf(BaseItemKind.PLAYLIST),
+                                ),
+                        ),
+                    showTitle = false,
+                    recursive = true,
+                    sortOptions = VideoSortOptions,
+                    defaultViewOptions = ViewOptionsPoster,
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .focusRequester(tabDetails.contentFocusRequester),
+                    positionCallback = { columns, position ->
+                        showHeader = position < columns
+                    },
+                    onClickItem = onClickItem,
+                    playEnabled = false,
+                    focusRequesterOnEmpty = tabDetails.tabFocusRequester,
                 )
             }
 
