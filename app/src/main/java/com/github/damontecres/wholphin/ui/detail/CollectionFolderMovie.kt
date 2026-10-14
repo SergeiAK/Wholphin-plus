@@ -42,6 +42,7 @@ fun CollectionFolderMovie(
                 TabDetails(R.string.library),
                 TabDetails(R.string.collections),
                 TabDetails(R.string.genres),
+                TabDetails(R.string.playlists),
             )
         }
 
@@ -143,6 +144,38 @@ fun CollectionFolderMovie(
                         Modifier
                             .fillMaxSize()
                             .focusRequester(tabDetails.contentFocusRequester),
+                )
+            }
+
+            // Playlists, the server returns those with items in this library
+            4 -> {
+                CollectionFolderView(
+                    preferences = preferences,
+                    onClickItem = { _, item ->
+                        preferencesViewModel.navigationManager.navigateTo(item.destination())
+                    },
+                    itemId = destination.itemId,
+                    viewModelKey = "${destination.itemId}_playlist",
+                    initialFilter =
+                        CollectionFolderFilter(
+                            filter =
+                                GetItemsFilter(
+                                    includeItemTypes = listOf(BaseItemKind.PLAYLIST),
+                                ),
+                        ),
+                    showTitle = false,
+                    recursive = true,
+                    sortOptions = VideoSortOptions,
+                    defaultViewOptions = ViewOptionsPoster,
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .focusRequester(tabDetails.contentFocusRequester),
+                    positionCallback = { columns, position ->
+                        showHeader = position < columns
+                    },
+                    playEnabled = false,
+                    focusRequesterOnEmpty = tabDetails.tabFocusRequester,
                 )
             }
 

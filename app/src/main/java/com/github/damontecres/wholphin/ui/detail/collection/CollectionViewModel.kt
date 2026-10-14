@@ -20,6 +20,7 @@ import com.github.damontecres.wholphin.services.KeyValueService
 import com.github.damontecres.wholphin.services.MediaManagementService
 import com.github.damontecres.wholphin.services.MusicService
 import com.github.damontecres.wholphin.services.NavigationManager
+import com.github.damontecres.wholphin.services.PlaylistCreator
 import com.github.damontecres.wholphin.services.ServerReportService
 import com.github.damontecres.wholphin.services.ThemeSongPlayer
 import com.github.damontecres.wholphin.services.UserPreferencesService
@@ -63,6 +64,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import org.jellyfin.sdk.api.client.ApiClient
+import org.jellyfin.sdk.api.client.extensions.playlistsApi
 import org.jellyfin.sdk.api.client.extensions.userLibraryApi
 import org.jellyfin.sdk.model.api.BaseItemKind
 import org.jellyfin.sdk.model.api.ImageType
@@ -92,6 +94,7 @@ class CollectionViewModel
         private val musicService: MusicService,
         val serverReportService: ServerReportService,
         private val filterOptionCache: FilterOptionCache,
+        private val playlistCreator: PlaylistCreator,
         @Assisted private val itemId: UUID,
     ) : ViewModel() {
         @AssistedFactory
@@ -156,6 +159,10 @@ class CollectionViewModel
                             logoImageUrl = logoImageUrl,
                         )
                     }
+                    if (collection.type == BaseItemKind.PLAYLIST) {
+                        val canEdit = canEditPlaylist()
+                        _state.update { it.copy(canEditPlaylist = canEdit) }
+                    }
                     listenForStateUpdates()
                     themeSongPlayer.playThemeFor(itemId)
                 } catch (ex: CancellationException) {
@@ -169,6 +176,34 @@ class CollectionViewModel
 
         fun release() {
             themeSongPlayer.stop()
+        }
+
+        private suspend fun canEditPlaylist(): Boolean {
+            val userId = serverRepository.currentUser?.id ?: return false
+            return try {
+                api.playlistsApi
+                    .getPlaylistUser(itemId, userId)
+                    .content.canEdit
+            } catch (ex: CancellationException) {
+                throw ex
+            } catch (ex: Exception) {
+                // The server returns 404 if the user has no permission
+                Timber.w(ex, "Cannot check permission for playlist %s", itemId)
+                false
+            }
+        }
+
+        fun removeFromPlaylist(
+            itemId: UUID,
+            position: RowColumn?,
+        ) = viewModelScope.launch(ExceptionHandler() + WholphinDispatchers.IO) {
+            playlistCreator.removeFromServerPlaylist(
+                playlistId = this@CollectionViewModel.itemId,
+                itemId = itemId,
+            )
+            if (position != null) {
+                refreshItem(itemId, position, true)
+            }
         }
 
         /**
@@ -525,4 +560,5 @@ data class CollectionState(
     val items: List<BaseItem?> = emptyList(),
     val separateItems: Map<BaseItemKind, HomeRowLoadingState> = emptyMap(),
     val logoImageUrl: String? = null,
+    val canEditPlaylist: Boolean = false,
 )
