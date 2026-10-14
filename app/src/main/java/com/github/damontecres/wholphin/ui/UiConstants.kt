@@ -81,6 +81,8 @@ val HomeItemFields =
     listOf(
         ItemFields.OVERVIEW,
         ItemFields.CAN_DELETE,
+        // Number of versions on the card
+        ItemFields.MEDIA_SOURCE_COUNT,
     )
 
 val PhotoItemFields =

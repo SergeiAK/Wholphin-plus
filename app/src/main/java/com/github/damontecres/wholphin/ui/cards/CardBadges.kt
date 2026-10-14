@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -13,10 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.github.damontecres.wholphin.R
@@ -70,7 +74,7 @@ sealed interface CornerBadge {
 val BaseItem?.collectionSize: Int
     get() = if (this?.type == BaseItemKind.BOX_SET) data.childCount ?: 0 else 0
 
-private val PlateColor = Color(0xE6000000)
+private val PlateColor = Color(0xFF121212)
 private val PlateTextColor = Color(0xFFECECEC)
 private val PlateMutedColor = Color(0xFF8A8A8A)
 private val PlateShape = RoundedCornerShape(4.dp)
@@ -133,7 +137,12 @@ fun VersionsBadge(
                 .border(1.dp, color, PlateShape)
                 .then(BadgePadding),
     ) {
-        BadgeIcon(R.string.fa_clone, color, textStyle)
+        Icon(
+            painter = painterResource(R.drawable.tabler_files),
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(with(LocalDensity.current) { textStyle.fontSize.toDp() }),
+        )
         Text(text = count.toString(), style = textStyle, color = color)
     }
 }
