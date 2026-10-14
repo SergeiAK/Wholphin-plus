@@ -8,6 +8,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.WholphinApplication
 import com.github.damontecres.wholphin.ui.abbreviateNumber
+import com.github.damontecres.wholphin.ui.cards.CornerBadge
 import com.github.damontecres.wholphin.ui.detail.CardGridItem
 import com.github.damontecres.wholphin.ui.detail.music.artistsString
 import com.github.damontecres.wholphin.ui.detail.series.SeasonEpisodeIds
@@ -15,6 +16,7 @@ import com.github.damontecres.wholphin.ui.dot
 import com.github.damontecres.wholphin.ui.formatDateTime
 import com.github.damontecres.wholphin.ui.formatDuration
 import com.github.damontecres.wholphin.ui.formatEpisodeNumber
+import com.github.damontecres.wholphin.ui.formatSeasonNumberShort
 import com.github.damontecres.wholphin.ui.getDateFormatter
 import com.github.damontecres.wholphin.ui.joinNotBlank
 import com.github.damontecres.wholphin.ui.nav.Destination
@@ -111,27 +113,43 @@ data class BaseItem(
     @Transient
     val ui =
         BaseItemUi(
-            episodeCornerText =
+            episodeCornerBadge =
                 if (type == BaseItemKind.EPISODE) {
-                    data.indexNumber?.let { formatEpisodeNumber(it) }
-                        ?: data.premiereDate?.let(::formatDateTime)
+                    (
+                        data.indexNumber?.let { formatEpisodeNumber(it) }
+                            ?: data.premiereDate?.let(::formatDateTime)
+                    )?.let { CornerBadge.Episode(season = null, episode = it) }
                 } else {
                     null
                 },
-            episodeUnplayedCornerText =
+            episodeUnplayedCornerBadge =
                 when (type) {
                     BaseItemKind.EPISODE -> {
-                        data.indexNumber?.let { formatEpisodeNumber(it) }
+                        // Outside of its season the episode number alone does not say which one
+                        data.indexNumber?.let {
+                            CornerBadge.Episode(
+                                season = data.parentIndexNumber?.let(::formatSeasonNumberShort),
+                                episode = formatEpisodeNumber(it),
+                            )
+                        }
+                    }
+
+                    BaseItemKind.BOX_SET -> {
+                        data.childCount?.takeIf { it > 0 }?.let {
+                            CornerBadge.collection(data.userData?.unplayedItemCount ?: 0, it)
+                        } ?: data.userData
+                            ?.unplayedItemCount
+                            ?.takeIf { it > 0 }
+                            ?.let { CornerBadge.Unplayed(abbreviateNumber(it)) }
                     }
 
                     BaseItemKind.SERIES,
                     BaseItemKind.SEASON,
-                    BaseItemKind.BOX_SET,
                     -> {
                         data.userData
                             ?.unplayedItemCount
                             ?.takeIf { it > 0 }
-                            ?.let { abbreviateNumber(it) }
+                            ?.let { CornerBadge.Unplayed(abbreviateNumber(it)) }
                     }
 
                     else -> {
@@ -361,8 +379,8 @@ val BaseItemDto.alphabetSortName: String get() = sortName ?: name ?: ""
 
 @Immutable
 data class BaseItemUi(
-    val episodeCornerText: String?,
-    val episodeUnplayedCornerText: String?,
+    val episodeCornerBadge: CornerBadge?,
+    val episodeUnplayedCornerBadge: CornerBadge?,
     val quickDetails: QuickDetailsData,
 )
 

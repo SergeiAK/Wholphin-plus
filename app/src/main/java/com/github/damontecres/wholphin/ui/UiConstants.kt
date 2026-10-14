@@ -68,6 +68,8 @@ val SlimItemFields =
         ItemFields.SORT_NAME,
         ItemFields.MEDIA_SOURCE_COUNT,
         ItemFields.CAN_DELETE,
+        // Size of a collection on its card
+        ItemFields.CHILD_COUNT,
     )
 
 /**
