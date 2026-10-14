@@ -414,8 +414,8 @@
     <string name="disable_audio_offload">Disable audio hardware offload</string>
     <string name="disable_audio_offload_summary">Disabling offloading audio decoding may fix playback freezes on some devices</string>
     <string name="view_options">View options</string>
-    <string name="show_as_grid">Show as grid</string>
-    <string name="show_as_list">Show as list</string>
+    <string name="show_as_grid">Grid view</string>
+    <string name="show_as_list">List view</string>
     <string name="columns">Columns</string>
     <string name="spacing">Spacing</string>
     <string name="aspect_ratio">Aspect Ratio</string>
