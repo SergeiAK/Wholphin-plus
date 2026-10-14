@@ -27,8 +27,10 @@ import com.github.damontecres.wholphin.ui.components.ExpandableFaButton
 import com.github.damontecres.wholphin.ui.components.ExpandablePlayButton
 import com.github.damontecres.wholphin.ui.components.FilterByButton
 import com.github.damontecres.wholphin.ui.components.SortByButton
+import com.github.damontecres.wholphin.ui.data.BoxSetSortOptions
 import com.github.damontecres.wholphin.ui.data.MovieSortOptions
 import com.github.damontecres.wholphin.ui.data.SortAndDirection
+import org.jellyfin.sdk.model.api.BaseItemKind
 import kotlin.time.Duration
 
 @Composable
@@ -44,8 +46,11 @@ fun CollectionButtons(
     canDelete: Boolean,
     moreOnClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onClickShowAsList: (() -> Unit)? = null,
 ) {
-    val sortOptions = MovieSortOptions
+    // Playlists have their own order, which is only available as the default sort
+    val sortOptions =
+        if (state.collection?.type == BaseItemKind.PLAYLIST) BoxSetSortOptions else MovieSortOptions
     val filterOptions = DefaultFilterOptions
     val firstFocus = remember { FocusRequester() }
     Row(
@@ -94,6 +99,16 @@ fun CollectionButtons(
                         title = state.collection?.title ?: "",
                         onConfirmDelete = onConfirmDelete,
                         modifier = Modifier,
+                    )
+                }
+            }
+
+            if (onClickShowAsList != null) {
+                item("show_as_list") {
+                    ExpandableFaButton(
+                        title = R.string.show_as_list,
+                        iconStringRes = R.string.fa_list_ul,
+                        onClick = onClickShowAsList,
                     )
                 }
             }

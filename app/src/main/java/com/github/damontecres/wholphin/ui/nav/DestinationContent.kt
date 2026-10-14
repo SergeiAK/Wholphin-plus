@@ -26,7 +26,7 @@ import com.github.damontecres.wholphin.ui.detail.DebugPage
 import com.github.damontecres.wholphin.ui.detail.FavoritesPage
 import com.github.damontecres.wholphin.ui.detail.HomeRowGrid
 import com.github.damontecres.wholphin.ui.detail.PersonPage
-import com.github.damontecres.wholphin.ui.detail.PlaylistDetails
+import com.github.damontecres.wholphin.ui.detail.PlaylistPage
 import com.github.damontecres.wholphin.ui.detail.collection.CollectionDetails
 import com.github.damontecres.wholphin.ui.detail.discover.DiscoverMovieDetails
 import com.github.damontecres.wholphin.ui.detail.discover.DiscoverPersonPage
@@ -191,7 +191,7 @@ fun DestinationContent(
 
                 BaseItemKind.PLAYLIST -> {
                     LaunchedEffect(Unit) { onClearBackdrop.invoke() }
-                    PlaylistDetails(
+                    PlaylistPage(
                         preferences = preferences,
                         destination = destination,
                         modifier = modifier,

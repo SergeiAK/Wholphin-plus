@@ -305,6 +305,9 @@ class CollectionViewModel
                     sortBy = sort?.let { listOf(sort.sort) },
                     sortOrder = sort?.let { listOf(sort.direction) },
                     fields = SlimItemFields,
+                    // A playlist shows its own items, not the box sets they belong to
+                    collapseBoxSetItems =
+                        if (state.value.collection?.type == BaseItemKind.PLAYLIST) false else null,
                 ).let {
                     filter?.applyTo(it, false) ?: it
                 }
