@@ -62,6 +62,7 @@ fun SeasonCard(
         unplayedItemCount = item?.data?.userData?.unplayedItemCount ?: 0,
         playedPercentage = item?.data?.userData?.playedPercentage ?: 0.0,
         numberOfVersions = item?.data?.mediaSourceCount ?: 0,
+        collectionSize = item.collectionSize,
         onClick = onClick,
         onLongClick = onLongClick,
         modifier = modifier,
@@ -136,6 +137,7 @@ fun SeasonCard(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     showImageOverlay: Boolean = false,
     aspectRatio: Float = AspectRatios.TALL,
+    collectionSize: Int = 0,
 ) {
     val focused by interactionSource.collectIsFocusedAsState()
     // Do not use `by` here, this way we are Defer reads and recompositions to only when modifier calculates
@@ -181,6 +183,7 @@ fun SeasonCard(
                     unwatchedCount = unplayedItemCount,
                     watchedPercent = playedPercentage,
                     numberOfVersions = numberOfVersions,
+                    collectionSize = collectionSize,
                     useFallbackText = false,
                     modifier =
                         Modifier

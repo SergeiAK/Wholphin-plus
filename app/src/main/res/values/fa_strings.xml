@@ -62,4 +62,6 @@
     <string name="fa_xmark" translatable="false">&#xf00d;</string>
     <string name="fa_dice" translatable="false">&#xf522;</string>
     <string name="fa_circle_xmark" translatable="false">&#xf057;</string>
+    <string name="fa_clone" translatable="false">&#xf24d;</string>
+    <string name="fa_layer_group" translatable="false">&#xf5fd;</string>
 </resources>

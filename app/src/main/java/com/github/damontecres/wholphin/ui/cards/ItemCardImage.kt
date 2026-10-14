@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,10 +34,10 @@ import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.data.model.BaseItem
-import com.github.damontecres.wholphin.ui.AppColors
 import com.github.damontecres.wholphin.ui.Cards
 import com.github.damontecres.wholphin.ui.FontAwesome
 import com.github.damontecres.wholphin.ui.LocalImageUrlService
+import com.github.damontecres.wholphin.ui.abbreviateNumber
 import com.github.damontecres.wholphin.ui.gt
 import com.github.damontecres.wholphin.ui.isNotNullOrBlank
 import com.github.damontecres.wholphin.ui.logCoilError
@@ -65,6 +64,7 @@ fun ItemCardImage(
     contentScale: ContentScale = ContentScale.Fit,
     fillWidth: Int? = null,
     fillHeight: Int? = null,
+    collectionSize: Int = 0,
 ) {
     val imageUrlService = LocalImageUrlService.current
     val imageUrl =
@@ -92,6 +92,7 @@ fun ItemCardImage(
         modifier = modifier,
         useFallbackText = useFallbackText,
         contentScale = contentScale,
+        collectionSize = collectionSize,
     )
 }
 
@@ -108,6 +109,7 @@ fun ItemCardImage(
     modifier: Modifier = Modifier,
     useFallbackText: Boolean = true,
     contentScale: ContentScale = ContentScale.Fit,
+    collectionSize: Int = 0,
     fallback: @Composable BoxScope.() -> Unit = {
         ItemCardImageFallback(
             name = name,
@@ -145,6 +147,7 @@ fun ItemCardImage(
                 unwatchedCount = unwatchedCount,
                 watchedPercent = watchedPercent,
                 numberOfVersions = numberOfVersions,
+                collectionSize = collectionSize,
                 modifier = Modifier,
             )
         }
@@ -202,7 +205,9 @@ fun ItemCardImageOverlay(
     watchedPercent: Double?,
     numberOfVersions: Int,
     modifier: Modifier = Modifier,
+    collectionSize: Int = 0,
 ) {
+    val badgeStyle = MaterialTheme.typography.bodyMedium
     Box(modifier = modifier.fillMaxSize()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -213,22 +218,7 @@ fun ItemCardImageOverlay(
                     .padding(4.dp),
         ) {
             if (numberOfVersions > 1) {
-                Box(
-                    modifier =
-                        Modifier
-                            .background(
-                                AppColors.TransparentBlack50,
-                                shape = RoundedCornerShape(25),
-                            ),
-                ) {
-                    Text(
-                        text = numberOfVersions.toString(),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyMedium,
-//                            fontSize = 16.sp,
-                        modifier = Modifier.padding(4.dp),
-                    )
-                }
+                VersionsBadge(numberOfVersions, badgeStyle)
             }
             if (favorite) {
                 FavoriteIndicator()
@@ -245,23 +235,10 @@ fun ItemCardImageOverlay(
             if (watched && (watchedPercent == null || watchedPercent <= 0.0 || watchedPercent >= 100.0)) {
                 WatchedIcon(Modifier.size(24.dp))
             }
-            if (unwatchedCount > 0) {
-                Box(
-                    modifier =
-                        Modifier
-                            .background(
-                                AppColors.TransparentBlack50,
-                                shape = RoundedCornerShape(25),
-                            ),
-                ) {
-                    Text(
-                        text = unwatchedCount.toString(),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyMedium,
-//                            fontSize = 16.sp,
-                        modifier = Modifier.padding(4.dp),
-                    )
-                }
+            if (collectionSize > 0) {
+                CornerBadge(CornerBadge.collection(unwatchedCount, collectionSize), badgeStyle)
+            } else if (unwatchedCount > 0) {
+                UnplayedBadge(abbreviateNumber(unwatchedCount), badgeStyle)
             }
         }
 

@@ -93,6 +93,7 @@ fun GridCard(
                 unwatchedCount = dto?.userData?.unplayedItemCount ?: -1,
                 watchedPercent = dto?.userData?.playedPercentage,
                 numberOfVersions = dto?.mediaSourceCount ?: 0,
+                collectionSize = item.collectionSize,
                 useFallbackText = false,
                 contentScale = imageContentScale,
                 fillWidth = fillWidth,

@@ -253,7 +253,7 @@ fun SeriesOverviewContent(
                                             ?.aspectRatio
                                             ?.coerceAtLeast(AspectRatios.FOUR_THREE)
                                             ?: (AspectRatios.WIDE),
-                                    cornerText = episode?.ui?.episodeCornerText,
+                                    cornerBadge = episode?.ui?.episodeCornerBadge,
                                     played = episode?.data?.userData?.played ?: false,
                                     playPercent =
                                         episode?.data?.userData?.playedPercentage

@@ -1,6 +1,5 @@
 package com.github.damontecres.wholphin.ui.cards
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +39,6 @@ import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.data.model.BaseItem
-import com.github.damontecres.wholphin.ui.AppColors
 import com.github.damontecres.wholphin.ui.AspectRatios
 import com.github.damontecres.wholphin.ui.Cards
 import com.github.damontecres.wholphin.ui.FontAwesome
@@ -59,7 +56,7 @@ fun BannerCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    cornerText: String? = null,
+    cornerBadge: CornerBadge? = null,
     played: Boolean = false,
     favorite: Boolean = false,
     playPercent: Double = 0.0,
@@ -139,7 +136,7 @@ fun BannerCard(
                             .align(Alignment.Center),
                 )
             }
-            if (played || cornerText != null) {
+            if (played || cornerBadge != null) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -151,22 +148,8 @@ fun BannerCard(
                     if (played && (playPercent <= 0 || playPercent >= 100)) {
                         WatchedIcon(Modifier.size(24.dp))
                     }
-                    if (cornerText != null) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .background(
-                                        AppColors.TransparentBlack50,
-                                        shape = RoundedCornerShape(25),
-                                    ),
-                        ) {
-                            Text(
-                                text = cornerText,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.padding(4.dp),
-                            )
-                        }
+                    if (cornerBadge != null) {
+                        CornerBadge(cornerBadge, MaterialTheme.typography.bodySmall)
                     }
                 }
             }
@@ -200,7 +183,7 @@ fun BannerCardWithTitle(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    cornerText: String? = null,
+    cornerBadge: CornerBadge? = null,
     played: Boolean = false,
     favorite: Boolean = false,
     playPercent: Double = 0.0,
@@ -225,7 +208,7 @@ fun BannerCardWithTitle(
             onClick = onClick,
             onLongClick = onLongClick,
             modifier = Modifier,
-            cornerText = cornerText,
+            cornerBadge = cornerBadge,
             played = played,
             favorite = favorite,
             playPercent = playPercent,
