@@ -35,6 +35,50 @@ on top:
 <img src="media/wholphin-plus/settings.png" width="49%" alt="Settings page showing the Signal theme's orange sliders and green switch together"/>
 </p>
 
+### New in plus-9
+
+**Card badges you can tell apart.** Upstream draws every corner number — unwatched episodes,
+number of versions, episode number — as the same translucent black chip, which is hard to read
+on light posters and gives no hint what the number means. Now each badge has its own look, with
+colors taken from the current theme (works in every theme, not only Signal):
+
+- **Unwatched episodes** (series, seasons) — a pill in the color of the "watched" check mark, with
+  black or white text picked for contrast: the counter and the check mark read as one indicator
+- **Number of versions** (a movie with several files) — an outlined "files" icon plus the count in
+  the accent color. Also shown on home page rows, where upstream showed no version badge at all
+- **Collections** — a "stack" icon with the number of movies; once you start a collection, the
+  number left to watch is shown next to it in the watched color, and a fully watched collection
+  gets the check mark. (Upstream's number here is actually the *unwatched* count, so a
+  half-watched 26-movie collection showed "8" with no hint what it was)
+- **Episode number** — a neutral chip with a thin outline; on the home page it now includes the
+  season ("S3 E2" instead of just "E2")
+
+**Playlists that look like collections.**
+
+- **Video playlists open as a poster grid** — the collection screen with its header and
+  description, view options, sorting and filters. A **Grid view / List view** button switches
+  between the grid and the classic list; the choice is remembered for each playlist. Until you
+  choose, video playlists open as a grid and music/mixed ones as a list
+- Sorting in the grid includes **Default** — the playlist's own order
+- **Remove from playlist** on long press in the grid, shown only when you are allowed to edit
+  the playlist. Reordering stays in the list view
+- **Playlists tab in movie and TV libraries** — the playlists whose content belongs to that
+  library, the same grouping the Jellyfin web client uses
+- **Fixed: genre and parental-rating filters were empty in playlists** (the server returns no
+  filter values for a playlist; they are now collected from its items). The list view gains a
+  Genres filter as well
+- **Fixed: movies in a playlist were replaced by their collections** — with the server option
+  "Group movies into collections" on, a playlist of 100 movies showed 81 entries, e.g. "The Dark
+  Knight (Collection)" instead of the movie. Fixed for the list view, the grid and playback
+
+<p align="center">
+<img src="media/wholphin-plus/badges-movies.jpg" width="49%" alt="Movie library: a versions badge with the files icon and collection badges with the stack icon"/>
+<img src="media/wholphin-plus/badges-series.jpg" width="49%" alt="TV library: unwatched-episode counts as green pills, plus the new Playlists tab"/>
+<br/>
+<img src="media/wholphin-plus/playlist-grid.jpg" width="49%" alt="A video playlist shown as a poster grid with sorting by playlist order and a list-view button"/>
+<img src="media/wholphin-plus/playlists-tab.jpg" width="49%" alt="Playlists tab in the movie library"/>
+</p>
+
 No separate installation guide here: grab the latest APK for your device from
 [this fork's releases page](https://github.com/SergeiAK/Wholphin-plus/releases/latest) the same
 way the [Installation](#installation) section below describes for upstream, just pointed at this
