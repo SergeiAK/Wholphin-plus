@@ -407,6 +407,7 @@ class CollectionViewModel
             filterOptionCache.getFilterOptionValues(
                 itemId,
                 filterOption,
+                fromItems = state.value.collection?.type == BaseItemKind.PLAYLIST,
             )
 
         suspend fun letterPosition(letter: Char): Int =
