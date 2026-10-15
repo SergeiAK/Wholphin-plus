@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -184,11 +185,9 @@ fun PlaybackControls(
                     .padding(vertical = 0.dp)
                     .fillMaxWidth(.95f),
         )
+        // Same width as the seek bar, so the end time lines up with the remaining time above it
         Box(
-            modifier =
-                Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(.95f),
         ) {
             PlaybackButtons(
                 player = player,
@@ -230,7 +229,9 @@ fun PlaybackControls(
                                 MaterialTheme.colorScheme.onSurface
                             },
                         style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(end = 32.dp),
+                        fontWeight = FontWeight.SemiBold,
+                        // Matches the padding of the remaining time in SeekTimecodes
+                        modifier = Modifier.padding(end = 8.dp),
                     )
                 }
             }
