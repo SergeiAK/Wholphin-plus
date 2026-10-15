@@ -292,7 +292,7 @@ fun PersonPage(
                 onClickViewMoreDiscover = {
                     state.discoverPerson?.let {
                         viewModel.navigationManager.navigateTo(
-                            Destination.DiscoveredItem(it, maxItems),
+                            Destination.DiscoveredItem(it, maxItems, creditsGrid = true),
                         )
                     }
                 },
@@ -331,7 +331,8 @@ fun PersonPageContent(
     birthdate: LocalDate?,
     deathdate: LocalDate?,
     birthPlace: String?,
-    favorite: Boolean,
+    // Null for a person who is not in the library, which hides the favorite button
+    favorite: Boolean?,
     movies: RowLoadingState,
     series: RowLoadingState,
     episodes: RowLoadingState,
@@ -485,7 +486,7 @@ fun PersonHeader(
     birthdate: LocalDate?,
     deathdate: LocalDate?,
     birthPlace: String?,
-    favorite: Boolean,
+    favorite: Boolean?,
     overviewOnClick: () -> Unit,
     favoriteOnClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -595,14 +596,16 @@ fun PersonHeader(
                 interactionSource = interactionSource,
                 modifier = Modifier.padding(top = 8.dp),
             )
-            ExpandableFaButton(
-                title = if (favorite) R.string.remove_favorite else R.string.add_favorite,
-                iconStringRes = R.string.fa_heart,
-                onClick = favoriteOnClick,
-                iconColor = if (favorite) Color.Red else Color.Unspecified,
-                interactionSource = buttonInteractionSource,
-                modifier = Modifier,
-            )
+            if (favorite != null) {
+                ExpandableFaButton(
+                    title = if (favorite) R.string.remove_favorite else R.string.add_favorite,
+                    iconStringRes = R.string.fa_heart,
+                    onClick = favoriteOnClick,
+                    iconColor = if (favorite) Color.Red else Color.Unspecified,
+                    interactionSource = buttonInteractionSource,
+                    modifier = Modifier,
+                )
+            }
         }
     }
 }
