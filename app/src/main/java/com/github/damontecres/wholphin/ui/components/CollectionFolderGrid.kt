@@ -79,11 +79,12 @@ fun CollectionFolderViewScope.CollectionFolderGrid(
                 HomePageHeader(
                     item = focusedItem,
                     showLogo = preferences.appPreferences.interfacePreferences.showLogos,
+                    overviewBeside = true,
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(HeaderUtils.padding),
+                            .height(150.dp)
+                            .padding(top = 16.dp, bottom = 8.dp, start = HeaderUtils.startPadding),
                 )
             }
             CardGrid(
