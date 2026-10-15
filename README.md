@@ -4,28 +4,90 @@
 
 **This is Wholphin+, a personal fork of [damontecres/Wholphin](https://github.com/damontecres/Wholphin)
 kept in sync with upstream and used day-to-day.** It installs and updates independently of the
-official app — everything else below describes the shared upstream project. What this fork adds
-on top:
+official app. Everything after the line below describes the shared upstream project; this part
+lists **every difference from upstream**, with where each one stands upstream.
 
-- **Signal theme** — a new color theme (green for watched state/progress, orange for focus and
-  technical labels), proposed upstream in [issue #91](https://github.com/damontecres/Wholphin/issues/91)
-- **Redesigned watched-progress bar** on cards — a thin, Plex-style fill over a dark track, colored
-  like the watched badge, proposed upstream in [issue #1989](https://github.com/damontecres/Wholphin/issues/1989)
-- **Dolby Vision Profile 7 → 8.1 conversion** (experimental setting, off by default) — dual-layer
-  Profile 7 rips direct play as Dolby Vision on devices whose decoder only lists Profile 8, sent
-  upstream as [PR #2017](https://github.com/damontecres/Wholphin/pull/2017)
-- **Direct play for out-of-spec Dolby Vision** (experimental setting, off by default) — files the
-  server tags `DOVIInvalid` play directly instead of being transcoded, on devices with a Dolby Vision
-  decoder, sent upstream as [PR #2065](https://github.com/damontecres/Wholphin/pull/2065)
-- **Built on upstream `main`**, not only on its last release, so fixes merged since then are included
-- **Alphabet jump bar shows only letters that actually have items** in the current library/filter,
-  also sent upstream as [PR #1975](https://github.com/damontecres/Wholphin/pull/1975)
-- **Player controls regrouped**: captions/audio/settings live in one row next to the subtitle line
-  above the seek bar, and a d-pad-up press while the controls are hidden focuses that row directly
+**Base:** upstream `main` as of 13 Oct 2026 (`v1.0.9` plus the commits merged since, including
+[#1644](https://github.com/damontecres/Wholphin/pull/1644) "force enable or disable HDR / Dolby
+Vision formats"), not only its last release.
+
+## What is different from upstream
+
+### Look and feel
+
+- **Signal theme** — a new color theme: green for watched state and progress, orange for focus and
+  technical labels. Proposed upstream in [issue #91](https://github.com/damontecres/Wholphin/issues/91)
+- **Watched-progress bar on cards** — a thin, Plex-style fill over a dark track, colored like the
+  watched badge, readable over light posters. Proposed upstream in
+  [issue #1989](https://github.com/damontecres/Wholphin/issues/1989)
+- **Card badges you can tell apart** — upstream draws every corner number as the same translucent
+  black chip. Here each badge has its own look, in the current theme's colors:
+  - *unwatched episodes* (series, seasons) — a pill in the "watched" check-mark color;
+  - *number of versions* — an outlined "files" icon with the count in the accent color, also on
+    home page rows, where upstream shows no version badge at all;
+  - *collections* — a "stack" icon with the number of movies, plus the number left to watch once
+    started and a check mark when fully watched (upstream's number here is the *unwatched* count
+    with no hint what it means);
+  - *episode number* — a neutral outlined chip; on the home page it includes the season ("S3 E2").
+
+  Fork only for now
+
+### Libraries and playlists
+
+- **Alphabet jump bar shows only letters that have items** in the current library or filter. Sent
+  upstream as [PR #1975](https://github.com/damontecres/Wholphin/pull/1975)
+- **Video playlists open as a poster grid** — the collection screen with header, description, view
+  options, sorting (including **Default**, the playlist's own order) and filters. A **Grid view /
+  List view** button switches layouts, remembered per playlist; until you choose, video playlists
+  open as a grid and music/mixed ones as a list
+- **Remove from playlist** on long press in the grid, when you may edit the playlist (reordering
+  stays in the list view)
+- **Playlists tab in movie and TV libraries** — the playlists whose content belongs to that
+  library, the same grouping the Jellyfin web client uses
+- **Fixed: genre and parental-rating filters were empty in playlists** — the server returns no
+  filter values for a playlist, so they are collected from its items; the list view gains a Genres
+  filter too
+- **Fixed: movies in a playlist were replaced by their collections** when the server option "Group
+  movies into collections" is on (a 100-movie playlist showed 81 entries) — in the list, the grid
+  and playback
+
+  Playlist changes are fork only for now
+
+### People
+
+- **One person page, wherever you open it from** — upstream shows a full page (photo, biography,
+  dates, library rows) for an actor opened from a library title, but a bare `Discover: <name>` grid
+  for the same actor opened from a Seerr title. Here a Seerr person who is in the library opens the
+  regular person page (matched by name and confirmed by TMDB id), and anyone else gets the same page
+  filled from Seerr: photo, biography, birth and death dates, place of birth and the filmography row.
+  Reported upstream in [issue #2022](https://github.com/damontecres/Wholphin/issues/2022)
+
+### Playback
+
+- **Player controls regrouped** — captions / audio / settings in one row next to the subtitle line
+  above the seek bar; a d-pad-up press while the controls are hidden focuses that row directly
   instead of always landing on play/pause
+- **"Ends at" lined up and emphasized** — its right edge matches the remaining time above it, and
+  it is set semi-bold so it reads apart from the two timecodes (same color)
+- **Smaller trickplay preview** — 112 dp high instead of 160 dp (half the area): upstream's preview
+  covers almost a third of a TV screen's height
+
+### Dolby Vision (experimental settings, off by default)
+
+- **Profile 7 → 8.1 conversion** — dual-layer Profile 7 rips direct play as Dolby Vision on devices
+  whose decoder only lists Profile 8. Sent upstream as
+  [PR #2017](https://github.com/damontecres/Wholphin/pull/2017)
+- **Direct play for out-of-spec Dolby Vision** — files the server tags `DOVIInvalid` play directly
+  instead of being transcoded, on devices with a Dolby Vision decoder. Sent upstream as
+  [PR #2065](https://github.com/damontecres/Wholphin/pull/2065)
+
+### Installation and updates
+
 - **Installs side-by-side with the official app** — separate application ID, its own icon with an
-  accent-colored plus badge so the launcher tells them apart — and **updates from this fork's own
-  [releases](https://github.com/SergeiAK/Wholphin-plus/releases)**, not from upstream or an app store
+  accent-colored plus badge so the launcher tells them apart
+- **Updates from this fork's own [releases](https://github.com/SergeiAK/Wholphin-plus/releases)**,
+  not from upstream or an app store; release APKs include the ffmpeg audio decoder (TrueHD, DTS)
+- Version names follow the upstream release they are built on, e.g. `v1.0.9-30-g…`
 
 <p align="center">
 <img src="media/wholphin-plus/home.jpg" width="49%" alt="Home page in the Signal theme"/>
@@ -33,45 +95,7 @@ on top:
 <br/>
 <img src="media/wholphin-plus/player-controls.png" width="49%" alt="Regrouped player controls, focused on captions after a d-pad-up press"/>
 <img src="media/wholphin-plus/settings.png" width="49%" alt="Settings page showing the Signal theme's orange sliders and green switch together"/>
-</p>
-
-### New in plus-9
-
-**Card badges you can tell apart.** Upstream draws every corner number — unwatched episodes,
-number of versions, episode number — as the same translucent black chip, which is hard to read
-on light posters and gives no hint what the number means. Now each badge has its own look, with
-colors taken from the current theme (works in every theme, not only Signal):
-
-- **Unwatched episodes** (series, seasons) — a pill in the color of the "watched" check mark, with
-  black or white text picked for contrast: the counter and the check mark read as one indicator
-- **Number of versions** (a movie with several files) — an outlined "files" icon plus the count in
-  the accent color. Also shown on home page rows, where upstream showed no version badge at all
-- **Collections** — a "stack" icon with the number of movies; once you start a collection, the
-  number left to watch is shown next to it in the watched color, and a fully watched collection
-  gets the check mark. (Upstream's number here is actually the *unwatched* count, so a
-  half-watched 26-movie collection showed "8" with no hint what it was)
-- **Episode number** — a neutral chip with a thin outline; on the home page it now includes the
-  season ("S3 E2" instead of just "E2")
-
-**Playlists that look like collections.**
-
-- **Video playlists open as a poster grid** — the collection screen with its header and
-  description, view options, sorting and filters. A **Grid view / List view** button switches
-  between the grid and the classic list; the choice is remembered for each playlist. Until you
-  choose, video playlists open as a grid and music/mixed ones as a list
-- Sorting in the grid includes **Default** — the playlist's own order
-- **Remove from playlist** on long press in the grid, shown only when you are allowed to edit
-  the playlist. Reordering stays in the list view
-- **Playlists tab in movie and TV libraries** — the playlists whose content belongs to that
-  library, the same grouping the Jellyfin web client uses
-- **Fixed: genre and parental-rating filters were empty in playlists** (the server returns no
-  filter values for a playlist; they are now collected from its items). The list view gains a
-  Genres filter as well
-- **Fixed: movies in a playlist were replaced by their collections** — with the server option
-  "Group movies into collections" on, a playlist of 100 movies showed 81 entries, e.g. "The Dark
-  Knight (Collection)" instead of the movie. Fixed for the list view, the grid and playback
-
-<p align="center">
+<br/>
 <img src="media/wholphin-plus/badges-movies.jpg" width="49%" alt="Movie library: a versions badge with the files icon and collection badges with the stack icon"/>
 <img src="media/wholphin-plus/badges-series.jpg" width="49%" alt="TV library: unwatched-episode counts as green pills, plus the new Playlists tab"/>
 <br/>
