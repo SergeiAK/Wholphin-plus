@@ -244,7 +244,8 @@ fun CollectionFolderListDetails(
         )
 
         item?.let {
-            QuickDetails(item.ui.quickDetails, null)
+            // Year and runtime are already in the selected list row
+            QuickDetails(item.ui.quickDetails, item.timeRemainingOrRuntime, showYearAndRuntime = false)
         }
 
         OverviewText(
