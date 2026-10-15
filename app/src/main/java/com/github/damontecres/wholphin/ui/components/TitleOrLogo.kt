@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
@@ -31,10 +32,11 @@ fun TitleOrLogo(
     logoImageUrl: String?,
     showLogo: Boolean,
     modifier: Modifier = Modifier,
+    maxHeight: Dp = HeaderUtils.logoHeight,
 ) {
     var imageError by remember { mutableStateOf(false) }
     Box(
-        modifier = modifier.heightIn(max = HeaderUtils.logoHeight),
+        modifier = modifier.heightIn(max = maxHeight),
     ) {
         if (showLogo && logoImageUrl != null && !imageError) {
             AsyncImage(
