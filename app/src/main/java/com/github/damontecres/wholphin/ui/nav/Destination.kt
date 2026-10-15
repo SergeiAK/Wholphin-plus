@@ -153,6 +153,8 @@ sealed class Destination(
         val item: DiscoverItem,
         // Index to scroll to on the person page grid
         val startIndex: Int = 0,
+        // For a person, show the plain grid of credits rather than the person page
+        val creditsGrid: Boolean = false,
     ) : Destination(false)
 
     @Serializable

@@ -1666,6 +1666,8 @@ components:
           example: 1
         name:
           type: string
+        birthday:
+          type: string
         deathday:
           type: string
         knownForDepartment:

@@ -6,6 +6,7 @@ import com.github.damontecres.wholphin.api.seerr.model.CreditCrew
 import com.github.damontecres.wholphin.api.seerr.model.MediaInfo
 import com.github.damontecres.wholphin.api.seerr.model.MovieDetails
 import com.github.damontecres.wholphin.api.seerr.model.MovieResult
+import com.github.damontecres.wholphin.api.seerr.model.PersonDetails
 import com.github.damontecres.wholphin.api.seerr.model.RootFolder
 import com.github.damontecres.wholphin.api.seerr.model.SearchGet200ResponseResultsInner
 import com.github.damontecres.wholphin.api.seerr.model.ServiceProfile
@@ -153,6 +154,14 @@ class SeerrService
                         .distinctBy { it.id }
                         .sortedByDescending { it.releaseDate }
                 }
+
+        /**
+         * Get a person's details (biography, dates, photo) in the given language
+         */
+        suspend fun personDetails(
+            personId: Int,
+            language: String?,
+        ): PersonDetails = api.personApi.personPersonIdGet(personId = personId, language = language)
 
         /**
          * Create a [DiscoverItem] for a person in the library so that the full grid of their

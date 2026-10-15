@@ -29,6 +29,7 @@ import com.github.damontecres.wholphin.ui.detail.PersonPage
 import com.github.damontecres.wholphin.ui.detail.PlaylistDetails
 import com.github.damontecres.wholphin.ui.detail.collection.CollectionDetails
 import com.github.damontecres.wholphin.ui.detail.discover.DiscoverMovieDetails
+import com.github.damontecres.wholphin.ui.detail.discover.DiscoverPersonDetails
 import com.github.damontecres.wholphin.ui.detail.discover.DiscoverPersonPage
 import com.github.damontecres.wholphin.ui.detail.discover.DiscoverSeriesDetails
 import com.github.damontecres.wholphin.ui.detail.episode.EpisodeDetails
@@ -403,11 +404,19 @@ fun DestinationContent(
 
                 SeerrItemType.PERSON -> {
                     LaunchedEffect(Unit) { onClearBackdrop.invoke() }
-                    DiscoverPersonPage(
-                        person = destination.item,
-                        startIndex = destination.startIndex,
-                        modifier = modifier,
-                    )
+                    if (destination.creditsGrid) {
+                        DiscoverPersonPage(
+                            person = destination.item,
+                            startIndex = destination.startIndex,
+                            modifier = modifier,
+                        )
+                    } else {
+                        DiscoverPersonDetails(
+                            preferences = preferences,
+                            person = destination.item,
+                            modifier = modifier,
+                        )
+                    }
                 }
 
                 SeerrItemType.UNKNOWN -> {
