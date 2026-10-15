@@ -224,7 +224,7 @@ fun PlaybackControls(
                                 MaterialTheme.colorScheme.onSurface
                             },
                         style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         // Matches the padding of the remaining time in SeekTimecodes
                         modifier = Modifier.padding(end = 8.dp),
                     )
@@ -337,10 +337,10 @@ fun SeekTimecodes(
 val buttonSpacing = 12.dp
 
 /**
- * Captions, audio and settings buttons shown next to the subtitle/end-time line, above the seek bar.
+ * Audio, captions and settings buttons shown next to the subtitle/end-time line, above the seek bar.
  *
- * Captions is first so an "up" press that reveals the controller can focus it directly
- * (see [FocusOnShow]), rather than always landing on play/pause.
+ * An "up" press that reveals the controller focuses captions directly (see [FocusOnShow]),
+ * rather than always landing on play/pause.
  */
 @Composable
 fun TopPlaybackButtons(
@@ -353,17 +353,6 @@ fun TopPlaybackButtons(
         modifier = modifier.focusGroup(),
         horizontalArrangement = Arrangement.spacedBy(buttonSpacing),
     ) {
-        // Captions
-        PlaybackButton(
-            enabled = true,
-            iconRes = R.drawable.captions_svgrepo_com,
-            onClick = {
-                onControllerInteraction.invoke()
-                onClickPlaybackDialogType.invoke(PlaybackDialogType.CAPTIONS)
-            },
-            onControllerInteraction = onControllerInteraction,
-            modifier = Modifier.focusRequester(initialFocusRequester),
-        )
         // Audio
         PlaybackFaButton(
             enabled = true,
@@ -374,6 +363,17 @@ fun TopPlaybackButtons(
             },
             onControllerInteraction = onControllerInteraction,
             modifier = Modifier,
+        )
+        // Captions
+        PlaybackButton(
+            enabled = true,
+            iconRes = R.drawable.captions_svgrepo_com,
+            onClick = {
+                onControllerInteraction.invoke()
+                onClickPlaybackDialogType.invoke(PlaybackDialogType.CAPTIONS)
+            },
+            onControllerInteraction = onControllerInteraction,
+            modifier = Modifier.focusRequester(initialFocusRequester),
         )
         // Settings
         PlaybackButton(
