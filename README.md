@@ -31,6 +31,13 @@ Vision formats"), not only its last release.
   - *episode number* — a neutral outlined chip; on the home page it includes the season ("S3 E2").
 
   Fork only for now
+- **Details on two lines** — upstream puts year, runtime, time left, age, ratings and the end time
+  on one line; on long lines (e.g. in Russian) the end time is cut down to a bare "Ends at", and in
+  the library list panel the age and ratings vanish. Here the first line holds the year and
+  everything about time, the second the age and ratings (only when there are any), and the end
+  time is never split. In the Signal theme the year sits on a plate like the age rating, so both
+  lines start with one. The library list panel drops year and runtime, already shown in the
+  selected row, and gains the end time. Fork only for now
 
 ### Libraries and playlists
 
@@ -64,11 +71,11 @@ Vision formats"), not only its last release.
 
 ### Playback
 
-- **Player controls regrouped** — captions / audio / settings in one row next to the subtitle line
-  above the seek bar; a d-pad-up press while the controls are hidden focuses that row directly
+- **Player controls regrouped** — audio / captions / settings in one row next to the subtitle line
+  above the seek bar; a d-pad-up press while the controls are hidden focuses captions directly
   instead of always landing on play/pause
 - **"Ends at" lined up and emphasized** — its right edge matches the remaining time above it, and
-  it is set semi-bold so it reads apart from the two timecodes (same color)
+  it is bold so it reads apart from the two timecodes (same color)
 - **Smaller trickplay preview** — 112 dp high instead of 160 dp (half the area): upstream's preview
   covers almost a third of a TV screen's height
 
