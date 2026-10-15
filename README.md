@@ -49,6 +49,12 @@ Vision formats"), not only its last release.
   open as a grid and music/mixed ones as a list
 - **Remove from playlist** on long press in the grid, when you may edit the playlist (reordering
   stays in the list view)
+- **Compact details header in the library grid** — with "Show details" on, upstream's header is a
+  fixed 200 dp with the overview under the details, 400 dp wide; once the details take two lines the
+  overview is cut to a sliver while the right half of the header stays empty. Here the overview sits
+  on the right, level with the title, up to six lines; the left column takes what the title and
+  details need, and a text title may wrap to two lines. The header is 150 dp, so the grid moves up.
+  Fork only for now
 - **Playlists tab in movie and TV libraries** — the playlists whose content belongs to that
   library, the same grouping the Jellyfin web client uses
 - **Fixed: genre and parental-rating filters were empty in playlists** — the server returns no
@@ -71,9 +77,9 @@ Vision formats"), not only its last release.
 
 ### Playback
 
-- **Player controls regrouped** — audio / captions / settings in one row next to the subtitle line
-  above the seek bar; a d-pad-up press while the controls are hidden focuses captions directly
-  instead of always landing on play/pause
+- **Player controls regrouped** — captions / audio / settings in one row next to the subtitle line
+  above the seek bar; a d-pad-up press while the controls are hidden focuses the middle one, audio,
+  instead of always landing on play/pause, so captions and settings are one press away
 - **"Ends at" lined up and emphasized** — its right edge matches the remaining time above it, and
   it is bold so it reads apart from the two timecodes (same color)
 - **Smaller trickplay preview** — 112 dp high instead of 160 dp (half the area): upstream's preview
