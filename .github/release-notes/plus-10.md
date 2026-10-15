@@ -8,8 +8,17 @@ same actor opened from a library title got the full page. Now:
 - anyone else gets the **same page filled from Seerr** — photo, biography, birth and death dates,
   place of birth and the filmography row; "View more" still opens the full grid
 
+A person not in your library whose biography TMDB lacks in your language gets the English one.
+
+### Details on two lines
+Year, runtime, time left and **end time** on the first line, age and ratings on the second. On long
+lines the end time used to be cut down to a bare "Ends at", and the library list lost the ratings
+altogether. In the Signal theme the year is on a plate like the age rating. The library list panel
+shows time left and end time instead of repeating the year and runtime of the selected row.
+
 ### Player
-- **"Ends at"** is lined up with the remaining time above it and set semi-bold, same color
+- **"Ends at"** is lined up with the remaining time above it and set bold, same color
+- **Audio and captions buttons swapped** — audio, captions, settings; d-pad up still focuses captions
 - **Smaller trickplay preview** while seeking — 112 dp high instead of 160 dp (half the area)
 
 ### Upstream
