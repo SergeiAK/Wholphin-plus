@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -543,6 +544,7 @@ fun HomePageHeader(
     item: BaseItem?,
     showLogo: Boolean,
     modifier: Modifier = Modifier,
+    overviewBeside: Boolean = false,
 ) {
     val isEpisode = item?.type == BaseItemKind.EPISODE
     val title =
@@ -576,6 +578,7 @@ fun HomePageHeader(
         showLogo = showLogo,
         logoImageUrl = rememberLogoUrl(item),
         modifier = modifier,
+        overviewBeside = overviewBeside,
     )
 }
 
@@ -591,7 +594,22 @@ fun HomePageHeader(
     showLogo: Boolean,
     logoImageUrl: String?,
     modifier: Modifier = Modifier,
+    overviewBeside: Boolean = false,
 ) {
+    if (overviewBeside) {
+        HomePageHeaderOverviewBeside(
+            title = title,
+            subtitle = subtitle,
+            overview = overview,
+            quickDetails = quickDetails,
+            timeRemaining = timeRemaining,
+            endsAt = endsAt,
+            showLogo = showLogo,
+            logoImageUrl = logoImageUrl,
+            modifier = modifier,
+        )
+        return
+    }
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier,
@@ -629,6 +647,59 @@ fun HomePageHeader(
             } else {
                 Spacer(overviewModifier)
             }
+        }
+    }
+}
+
+/**
+ * Compact header for the library grid: title, subtitle and details on the left, the overview in
+ * the free space on the right, starting level with the title. Lets the header be shorter.
+ */
+@Composable
+private fun HomePageHeaderOverviewBeside(
+    title: String?,
+    subtitle: String?,
+    overview: String?,
+    quickDetails: QuickDetailsData?,
+    timeRemaining: Duration?,
+    endsAt: DateTime?,
+    showLogo: Boolean,
+    logoImageUrl: String?,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(32.dp),
+        modifier = modifier,
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.weight(.4f),
+        ) {
+            TitleOrLogo(
+                title = title,
+                logoImageUrl = logoImageUrl,
+                showLogo = showLogo,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            if (subtitle != null) {
+                EpisodeName(subtitle)
+            }
+            QuickDetails(quickDetails, timeRemaining, endsAt = endsAt)
+        }
+        if (overview.isNotNullOrBlank()) {
+            Text(
+                text = overview,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 6,
+                overflow = TextOverflow.Ellipsis,
+                modifier =
+                    Modifier
+                        .weight(.6f)
+                        .padding(end = 48.dp),
+            )
+        } else {
+            Spacer(Modifier.weight(.6f))
         }
     }
 }
