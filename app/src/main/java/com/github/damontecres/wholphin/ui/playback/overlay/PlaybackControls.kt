@@ -337,10 +337,10 @@ fun SeekTimecodes(
 val buttonSpacing = 12.dp
 
 /**
- * Audio, captions and settings buttons shown next to the subtitle/end-time line, above the seek bar.
+ * Captions, audio and settings buttons shown next to the subtitle/end-time line, above the seek bar.
  *
- * An "up" press that reveals the controller focuses captions directly (see [FocusOnShow]),
- * rather than always landing on play/pause.
+ * An "up" press that reveals the controller focuses audio, the middle button, directly
+ * (see [FocusOnShow]): captions and settings are then one press away either side.
  */
 @Composable
 fun TopPlaybackButtons(
@@ -353,17 +353,6 @@ fun TopPlaybackButtons(
         modifier = modifier.focusGroup(),
         horizontalArrangement = Arrangement.spacedBy(buttonSpacing),
     ) {
-        // Audio
-        PlaybackFaButton(
-            enabled = true,
-            iconRes = R.string.fa_volume_high,
-            onClick = {
-                onControllerInteraction.invoke()
-                onClickPlaybackDialogType.invoke(PlaybackDialogType.AUDIO)
-            },
-            onControllerInteraction = onControllerInteraction,
-            modifier = Modifier,
-        )
         // Captions
         PlaybackButton(
             enabled = true,
@@ -371,6 +360,17 @@ fun TopPlaybackButtons(
             onClick = {
                 onControllerInteraction.invoke()
                 onClickPlaybackDialogType.invoke(PlaybackDialogType.CAPTIONS)
+            },
+            onControllerInteraction = onControllerInteraction,
+            modifier = Modifier,
+        )
+        // Audio
+        PlaybackFaButton(
+            enabled = true,
+            iconRes = R.string.fa_volume_high,
+            onClick = {
+                onControllerInteraction.invoke()
+                onClickPlaybackDialogType.invoke(PlaybackDialogType.AUDIO)
             },
             onControllerInteraction = onControllerInteraction,
             modifier = Modifier.focusRequester(initialFocusRequester),
