@@ -70,6 +70,12 @@ fun Modifier.offsetByPercent(
 )
 
 /**
+ * Height of the trickplay preview. 160dp (upstream) took almost a third of a TV screen's height;
+ * this is half the area.
+ */
+val SeekPreviewHeight = 112.dp
+
+/**
  * Show trickplay preview image. This composable assumes the provided URL is for the correct index.
  *
  * If no trickplay image is available, just the timestamp will be shown.
@@ -84,7 +90,7 @@ fun SeekPreviewImage(
     val context = LocalContext.current
 
     if (previewImageUrl.isNotNullOrBlank()) {
-        val height = 160.dp
+        val height = SeekPreviewHeight
         val width = height * (trickPlayInfo.width.toFloat() / trickPlayInfo.height)
         val scale = with(LocalDensity.current) { width.toPx() / trickPlayInfo.width }
 
