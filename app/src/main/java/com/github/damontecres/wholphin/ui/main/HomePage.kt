@@ -5,7 +5,9 @@ import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -667,18 +670,53 @@ private fun HomePageHeaderOverviewBeside(
     logoImageUrl: String?,
     modifier: Modifier = Modifier,
 ) {
+    BoxWithConstraints(modifier = modifier) {
+        // The left column takes what the details line needs (a long "time left • ends at" line
+        // must not be cut), within bounds; a long text title wraps to two lines inside it
+        HomePageHeaderOverviewBesideContent(
+            title = title,
+            subtitle = subtitle,
+            overview = overview,
+            quickDetails = quickDetails,
+            timeRemaining = timeRemaining,
+            endsAt = endsAt,
+            showLogo = showLogo,
+            logoImageUrl = logoImageUrl,
+            minLeftWidth = maxWidth * .38f,
+            maxLeftWidth = maxWidth * .55f,
+        )
+    }
+}
+
+@Composable
+private fun HomePageHeaderOverviewBesideContent(
+    title: String?,
+    subtitle: String?,
+    overview: String?,
+    quickDetails: QuickDetailsData?,
+    timeRemaining: Duration?,
+    endsAt: DateTime?,
+    showLogo: Boolean,
+    logoImageUrl: String?,
+    minLeftWidth: Dp,
+    maxLeftWidth: Dp,
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(32.dp),
-        modifier = modifier,
+        modifier = Modifier.fillMaxSize(),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.weight(.4f),
+            modifier =
+                Modifier
+                    .widthIn(min = minLeftWidth, max = maxLeftWidth)
+                    .width(IntrinsicSize.Max),
         ) {
             TitleOrLogo(
                 title = title,
                 logoImageUrl = logoImageUrl,
                 showLogo = showLogo,
+                maxHeight = 72.dp,
                 modifier = Modifier.fillMaxWidth(),
             )
             if (subtitle != null) {
@@ -695,11 +733,9 @@ private fun HomePageHeaderOverviewBeside(
                 overflow = TextOverflow.Ellipsis,
                 modifier =
                     Modifier
-                        .weight(.6f)
+                        .weight(1f)
                         .padding(end = 48.dp),
             )
-        } else {
-            Spacer(Modifier.weight(.6f))
         }
     }
 }
