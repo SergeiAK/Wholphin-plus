@@ -245,6 +245,11 @@ data class BaseItem(
                                 }
                             }
                         },
+                    timeLeft =
+                        data.timeRemaining?.roundMinutes?.let {
+                            val resources = WholphinApplication.instance.resources
+                            resources.getString(R.string.time_left, resources.formatDuration(it))
+                        },
                     officialRating =
                         data.officialRating?.let {
                             buildAnnotatedString {
@@ -386,6 +391,8 @@ data class BaseItemUi(
 
 data class QuickDetailsData(
     val basic: AnnotatedString,
+    // The "time left" part of [basic] on its own, for places that show it without year and runtime
+    val timeLeft: String? = null,
     val officialRating: AnnotatedString? = null,
     val criticRating: AnnotatedString? = null,
     val communityRating: AnnotatedString? = null,
