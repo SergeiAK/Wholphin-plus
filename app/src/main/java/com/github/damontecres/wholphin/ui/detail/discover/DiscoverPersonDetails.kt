@@ -92,7 +92,16 @@ class DiscoverPersonDetailsViewModel
                         if (libraryId != null) {
                             DiscoverPersonState.InLibrary(libraryId)
                         } else {
-                            val details = seerrService.personDetails(person.id, Locale.getDefault().language)
+                            val language = Locale.getDefault().language
+                            val details =
+                                seerrService.personDetails(person.id, language).let { local ->
+                                    // TMDB often has no biography in the user's language; fall back to English
+                                    if (local.biography.isNullOrBlank() && language != "en") {
+                                        local.copy(biography = seerrService.personDetails(person.id, "en").biography)
+                                    } else {
+                                        local
+                                    }
+                                }
                             DiscoverPersonState.FromSeerr(
                                 details = details,
                                 imageUrl = seerrService.createImageUrl(ImageType.PRIMARY, details.profilePath, null),
