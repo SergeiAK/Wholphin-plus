@@ -7,9 +7,10 @@ kept in sync with upstream and used day-to-day.** It installs and updates indepe
 official app. Everything after the line below describes the shared upstream project; this part
 lists **every difference from upstream**, with where each one stands upstream.
 
-**Base:** upstream `main` as of 13 Oct 2026 (`v1.0.9` plus the commits merged since, including
+**Base:** upstream `main` as of 16 Oct 2026 (`v1.0.9` plus the commits merged since, including
 [#1644](https://github.com/damontecres/Wholphin/pull/1644) "force enable or disable HDR / Dolby
-Vision formats"), not only its last release.
+Vision formats" and [#1802](https://github.com/damontecres/Wholphin/pull/1802) "track persistence
+for series & episodes"), not only its last release.
 
 ## What is different from upstream
 
@@ -84,6 +85,14 @@ Vision formats"), not only its last release.
   it is bold so it reads apart from the two timecodes (same color)
 - **Smaller trickplay preview** — 112 dp high instead of 160 dp (half the area): upstream's preview
   covers almost a third of a TV screen's height
+- **Fixed: a subtitle chosen for one episode was not used for the next one in the player** —
+  upstream (since #1802) remembers the audio and subtitle track you pick for the season and the
+  series, but the player looked up the subtitle choice as an audio one, found nothing and fell back
+  to the profile settings, while the episode page showed the remembered track
+- **Fixed: the remembered track was matched by the wrong position** — with English, Russian,
+  Russian tracks and the second Russian one chosen, the next episode played the first Russian one
+  unless the titles differed: the choice is saved as a position among all audio tracks but was
+  compared with positions among the Russian ones only. Fork only for now
 
 ### Dolby Vision (experimental settings, off by default)
 
