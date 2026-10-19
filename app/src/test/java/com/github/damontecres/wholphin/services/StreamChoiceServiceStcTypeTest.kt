@@ -1,7 +1,9 @@
 package com.github.damontecres.wholphin.services
 
 import com.github.damontecres.wholphin.data.SeriesTrackChoiceDao
+import com.github.damontecres.wholphin.data.model.ActivationFlag
 import com.github.damontecres.wholphin.data.model.JellyfinUserPreferences
+import com.github.damontecres.wholphin.data.model.RelativeMediaStream
 import com.github.damontecres.wholphin.data.model.SeriesTrackChoice
 import com.github.damontecres.wholphin.data.model.SeriesTrackChoiceType
 import com.github.damontecres.wholphin.data.model.TrackChoiceParentType
@@ -20,7 +22,7 @@ import org.junit.Assert
 import org.junit.Test
 
 /**
- * Audio choices must be looked up as audio and subtitle choices as subtitles
+ * Season and series track choices: looked up by the right type and matched by position
  */
 class StreamChoiceServiceStcTypeTest {
     private val seasonId = UUID.randomUUID()
@@ -101,4 +103,24 @@ class StreamChoiceServiceStcTypeTest {
             val result = service.chooseSubtitleStream(episode, source, null, null, stc, prefs)
             Assert.assertEquals(3, result?.stream?.index)
         }
+
+    @Test
+    fun `second track of a language is found by its position among all audio tracks`() {
+        // eng, rus (default), rus: the user picked the second Russian track, the third audio track
+        val audio = listOf(audio(1, "eng"), audio(2, "rus", default = true), audio(3, "rus"))
+        val chosen = RelativeMediaStream.from(3, audio)!!
+        Assert.assertEquals(2, chosen.relativeIndex)
+        val choice =
+            SeriesTrackChoice(
+                userId = 1,
+                itemId = UUID.randomUUID(),
+                parentId = seasonId,
+                type = SeriesTrackChoiceType.AUDIO,
+                parentType = TrackChoiceParentType.SEASON,
+                stream = chosen,
+                activation = ActivationFlag.ACTIVATED,
+            )
+        val result = service().chooseAudioStream(audio, null, listOf(choice), prefs)
+        Assert.assertEquals(3, result.stream?.index)
+    }
 }

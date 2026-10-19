@@ -599,27 +599,27 @@ fun scoreStreams(
     if (choice.activation == ActivationFlag.DISABLED) {
         return null
     }
+    // Relative indexes are taken over all streams, like the saved choice's, before any filtering
     val streams =
-        streams.filter {
+        streams.asRelative().filter { s ->
             if (
                 (choice.activation == ActivationFlag.ONLY_FORCED || choice.has(TrackFlag.FORCED)) &&
-                !isForcedOrSigns(it)
+                !isForcedOrSigns(s.stream)
             ) {
                 // Filter out non-forced tracks if the user only wants forced
                 return@filter false
             }
             if (choice.language.isNotUnknown &&
-                !choice.language.equalsLangExact(it.language)
+                !choice.language.equalsLangExact(s.language)
             ) {
                 // Filter out languages that do not match
                 return@filter false
             }
             // Filter by type
-            choice.type.mediaStreamType == it.type
+            choice.type.mediaStreamType == s.type
         }
     val scored =
         streams
-            .asRelative()
             .map { s ->
                 var score = 0
 
