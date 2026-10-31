@@ -100,6 +100,8 @@ class PlaylistCreator
                         sortBy = listOf(sortAndDirection.sort),
                         sortOrder = listOf(sortAndDirection.direction),
                         excludeLocationTypes = listOf(LocationType.VIRTUAL),
+                        // Otherwise the server may group the movies into their box sets
+                        collapseBoxSetItems = false,
                     ),
                 )
             val items = GetItemsRequestHandler.execute(api, request).content.items
