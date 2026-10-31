@@ -524,6 +524,8 @@ class CollectionFolderViewModel
                                 }
                             },
                         fields = SlimItemFields,
+                        // Otherwise the server may replace the movies of a playlist with their box sets
+                        collapseBoxSetItems = false.takeIf { item?.type == BaseItemKind.PLAYLIST },
                     ),
                 )
             return request
