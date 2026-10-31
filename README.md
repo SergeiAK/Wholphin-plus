@@ -7,10 +7,11 @@ kept in sync with upstream and used day-to-day.** It installs and updates indepe
 official app. Everything after the line below describes the shared upstream project; this part
 lists **every difference from upstream**, with where each one stands upstream.
 
-**Base:** upstream `main` as of 16 Oct 2026 (`v1.0.9` plus the commits merged since, including
-[#1644](https://github.com/damontecres/Wholphin/pull/1644) "force enable or disable HDR / Dolby
-Vision formats" and [#1802](https://github.com/damontecres/Wholphin/pull/1802) "track persistence
-for series & episodes"), not only its last release.
+**Base:** upstream `main` as of 28 Oct 2026 (`v1.0.9` plus the commits merged since, including
+[#2017](https://github.com/damontecres/Wholphin/pull/2017) "convert Dolby Vision profile 7 to 8.1",
+[#2113](https://github.com/damontecres/Wholphin/pull/2113) "playlist details to match library grid"
+and [#2097](https://github.com/damontecres/Wholphin/pull/2097) "change max bitrate during playback"),
+not only its last release.
 
 ## What is different from upstream
 
@@ -44,12 +45,6 @@ for series & episodes"), not only its last release.
 
 - **Alphabet jump bar shows only letters that have items** in the current library or filter. Sent
   upstream as [PR #1975](https://github.com/damontecres/Wholphin/pull/1975)
-- **Video playlists open as a poster grid** — the collection screen with header, description, view
-  options, sorting (including **Default**, the playlist's own order) and filters. A **Grid view /
-  List view** button switches layouts, remembered per playlist; until you choose, video playlists
-  open as a grid and music/mixed ones as a list
-- **Remove from playlist** on long press in the grid, when you may edit the playlist (reordering
-  stays in the list view)
 - **Compact details header in the library grid** — with "Show details" on, upstream's header is a
   fixed 200 dp with the overview under the details, 400 dp wide; once the details take two lines the
   overview is cut to a sliver while the right half of the header stays empty. Here the overview sits
@@ -59,13 +54,15 @@ for series & episodes"), not only its last release.
 - **Playlists tab in movie and TV libraries** — the playlists whose content belongs to that
   library, the same grouping the Jellyfin web client uses
 - **Fixed: genre and parental-rating filters were empty in playlists** — the server returns no
-  filter values for a playlist, so they are collected from its items; the list view gains a Genres
-  filter too
+  filter values for a playlist, so they are collected from its items. Sent upstream as
+  [PR #2105](https://github.com/damontecres/Wholphin/pull/2105)
 - **Fixed: movies in a playlist were replaced by their collections** when the server option "Group
-  movies into collections" is on (a 100-movie playlist showed 81 entries) — in the list, the grid
-  and playback
+  movies into collections" is on (a 100-movie playlist showed 81 entries) — on the playlist page
+  and in playback. Fork only for now
 
-  Playlist changes are fork only for now
+  The playlist page itself — poster grid, layouts, sorting, remove from playlist — is upstream's
+  since [#2113](https://github.com/damontecres/Wholphin/pull/2113), which replaced this fork's own
+  grid
 
 ### People
 
@@ -96,12 +93,12 @@ for series & episodes"), not only its last release.
 
 ### Dolby Vision (experimental settings, off by default)
 
-- **Profile 7 → 8.1 conversion** — dual-layer Profile 7 rips direct play as Dolby Vision on devices
-  whose decoder only lists Profile 8. Sent upstream as
-  [PR #2017](https://github.com/damontecres/Wholphin/pull/2017)
 - **Direct play for out-of-spec Dolby Vision** — files the server tags `DOVIInvalid` play directly
   instead of being transcoded, on devices with a Dolby Vision decoder. Sent upstream as
   [PR #2065](https://github.com/damontecres/Wholphin/pull/2065)
+
+Profile 7 → 8.1 conversion, which started in this fork, is upstream's since
+[#2017](https://github.com/damontecres/Wholphin/pull/2017).
 
 ### Installation and updates
 
