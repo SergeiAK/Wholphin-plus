@@ -1,5 +1,10 @@
 ## What's new in plus-14
 
+### Cast and crew on separate rows
+- Movies and series: a Cast row and a Crew row instead of one People row, where the director
+  came after the whole cast. One card per person with every job ("Director, Writer"), director first
+- Episodes: guest stars first, then the episode's director and writers, then the regular cast
+
 ### Rebased on upstream `v1.1.0` (5 Nov 2026)
 - Artists page can show artists or album artists
   ([#2127](https://github.com/damontecres/Wholphin/pull/2127)); the alphabet bar of this fork

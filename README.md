@@ -71,6 +71,10 @@ installed".
   regular person page (matched by name and confirmed by TMDB id), and anyone else gets the same page
   filled from Seerr: photo, biography, birth and death dates, place of birth and the filmography row.
   Reported upstream in [issue #2022](https://github.com/damontecres/Wholphin/issues/2022)
+- **Cast and crew on separate rows** — upstream shows one People row where the director, writers and
+  producers come after the whole cast. Movies and series have a Cast row and a Crew row (director
+  first, one card per person with every job: "Director, Writer"); an episode shows its guest stars,
+  then its own director and writers, then the regular cast. Not proposed upstream yet
 
 ### Playback
 
