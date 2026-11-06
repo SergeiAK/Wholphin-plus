@@ -203,6 +203,8 @@
     <string name="reset">Сброс</string>
     <string name="cast_and_crew"><![CDATA[Актёры и съёмочная группа]]></string>
     <string name="guest_stars">Приглашённые звёзды</string>
+    <string name="cast">В ролях</string>
+    <string name="crew">Съёмочная группа</string>
     <string name="aspect_ratio">Соотношение сторон</string>
     <string name="show_details">Показать подробности</string>
     <string name="spacing">Интервал</string>

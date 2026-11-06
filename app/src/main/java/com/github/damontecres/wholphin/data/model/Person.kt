@@ -75,7 +75,7 @@ private fun personRole(
     }
 
 @get:StringRes
-private val PersonKind.stringRes: Int?
+internal val PersonKind.stringRes: Int?
     get() =
         when (this) {
             PersonKind.UNKNOWN -> R.string.unknown

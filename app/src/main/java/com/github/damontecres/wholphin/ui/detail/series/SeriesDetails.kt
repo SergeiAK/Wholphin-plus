@@ -46,6 +46,7 @@ import com.github.damontecres.wholphin.data.model.DiscoverItem
 import com.github.damontecres.wholphin.data.model.Person
 import com.github.damontecres.wholphin.data.model.Trailer
 import com.github.damontecres.wholphin.data.model.studioNames
+import com.github.damontecres.wholphin.data.model.toCastAndCrew
 import com.github.damontecres.wholphin.preferences.UserPreferences
 import com.github.damontecres.wholphin.services.TrailerService
 import com.github.damontecres.wholphin.ui.Cards
@@ -314,8 +315,9 @@ fun SeriesDetails(
 
 private const val HEADER_ROW = 0
 private const val SEASONS_ROW = HEADER_ROW + 1
-private const val PEOPLE_ROW = SEASONS_ROW + 1
-private const val TRAILER_ROW = PEOPLE_ROW + 1
+private const val CAST_ROW = SEASONS_ROW + 1
+private const val CREW_ROW = CAST_ROW + 1
+private const val TRAILER_ROW = CREW_ROW + 1
 private const val EXTRAS_ROW = TRAILER_ROW + 1
 private const val SIMILAR_ROW = EXTRAS_ROW + 1
 private const val DISCOVER_ROW = SIMILAR_ROW + 1
@@ -352,6 +354,10 @@ fun SeriesDetailsContent(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val castAndCrew =
+        remember(people) {
+            people.toCastAndCrew(context).let { it.copy(cast = it.cast + it.guestStars) }
+        }
 
     var position by rememberInt()
     val focusRequesters = remember { List(DISCOVER_ROW + 1) { FocusRequester() } }
@@ -535,16 +541,17 @@ fun SeriesDetailsContent(
                         },
                     )
                 }
-                if (people.isNotEmpty()) {
+                if (castAndCrew.cast.isNotEmpty()) {
                     item {
                         PersonRow(
-                            people = people,
+                            title = R.string.cast,
+                            people = castAndCrew.cast,
                             onClick = {
-                                position = PEOPLE_ROW
+                                position = CAST_ROW
                                 onClickPerson.invoke(it)
                             },
                             onLongClick = { index, person ->
-                                position = PEOPLE_ROW
+                                position = CAST_ROW
                                 onShowContextMenu.invoke(
                                     ContextMenu.ForPerson(
                                         fromLongClick = true,
@@ -560,7 +567,37 @@ fun SeriesDetailsContent(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .focusRequester(focusRequesters[PEOPLE_ROW]),
+                                    .focusRequester(focusRequesters[CAST_ROW]),
+                        )
+                    }
+                }
+                if (castAndCrew.crew.isNotEmpty()) {
+                    item {
+                        PersonRow(
+                            title = R.string.crew,
+                            people = castAndCrew.crew,
+                            onClick = {
+                                position = CREW_ROW
+                                onClickPerson.invoke(it)
+                            },
+                            onLongClick = { index, person ->
+                                position = CREW_ROW
+                                onShowContextMenu.invoke(
+                                    ContextMenu.ForPerson(
+                                        fromLongClick = true,
+                                        person = person,
+                                        actions =
+                                            PersonContextActions(
+                                                navigateTo = actions.navigateTo,
+                                                onClickFavorite = actions.onClickFavorite,
+                                            ),
+                                    ),
+                                )
+                            },
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(focusRequesters[CREW_ROW]),
                         )
                     }
                 }

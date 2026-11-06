@@ -18,6 +18,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.data.model.BaseItem
+import com.github.damontecres.wholphin.data.model.isCrew
 import com.github.damontecres.wholphin.preferences.UserPreferences
 import com.github.damontecres.wholphin.ui.RequestOrRestoreFocus
 import com.github.damontecres.wholphin.ui.components.ContextMenu
@@ -79,8 +80,9 @@ fun SeriesOverview(
 ) {
     val firstItemFocusRequester = remember { FocusRequester() }
     val episodeRowFocusRequester = remember { FocusRequester() }
-    val castCrewRowFocusRequester = remember { FocusRequester() }
+    val castRowFocusRequester = remember { FocusRequester() }
     val guestStarRowFocusRequester = remember { FocusRequester() }
+    val crewRowFocusRequester = remember { FocusRequester() }
     val extrasRowFocusRequester = remember { FocusRequester() }
 
     val state by viewModel.state.collectAsState()
@@ -178,8 +180,9 @@ fun SeriesOverview(
             RequestOrRestoreFocus(
                 when (rowFocused) {
                     EPISODE_ROW -> episodeRowFocusRequester
-                    CAST_AND_CREW_ROW -> castCrewRowFocusRequester
+                    CAST_ROW -> castRowFocusRequester
                     GUEST_STAR_ROW -> guestStarRowFocusRequester
+                    CREW_ROW -> crewRowFocusRequester
                     EXTRAS_ROW -> extrasRowFocusRequester
                     else -> episodeRowFocusRequester
                 },
@@ -204,8 +207,9 @@ fun SeriesOverview(
                 position = position,
                 firstItemFocusRequester = firstItemFocusRequester,
                 episodeRowFocusRequester = episodeRowFocusRequester,
-                castCrewRowFocusRequester = castCrewRowFocusRequester,
+                castRowFocusRequester = castRowFocusRequester,
                 guestStarRowFocusRequester = guestStarRowFocusRequester,
+                crewRowFocusRequester = crewRowFocusRequester,
                 extrasRowFocusRequester = extrasRowFocusRequester,
                 onChangeSeason = { index ->
                     if (index != position.seasonTabIndex) {
@@ -296,7 +300,11 @@ fun SeriesOverview(
                 },
                 personOnClick = {
                     rowFocused =
-                        if (it.type == PersonKind.GUEST_STAR) GUEST_STAR_ROW else CAST_AND_CREW_ROW
+                        when {
+                            it.type == PersonKind.GUEST_STAR -> GUEST_STAR_ROW
+                            it.type.isCrew() -> CREW_ROW
+                            else -> CAST_ROW
+                        }
                     viewModel.navigateTo(
                         Destination.MediaItem(
                             it.id,
@@ -354,6 +362,7 @@ fun SeriesOverview(
 }
 
 private const val EPISODE_ROW = 0
-private const val CAST_AND_CREW_ROW = EPISODE_ROW + 1
-private const val GUEST_STAR_ROW = CAST_AND_CREW_ROW + 1
+private const val CAST_ROW = EPISODE_ROW + 1
+private const val GUEST_STAR_ROW = CAST_ROW + 1
 private const val EXTRAS_ROW = GUEST_STAR_ROW + 1
+private const val CREW_ROW = EXTRAS_ROW + 1

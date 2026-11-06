@@ -42,12 +42,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.github.damontecres.wholphin.R
 import com.github.damontecres.wholphin.data.ChosenStreams
 import com.github.damontecres.wholphin.data.ExtrasItem
 import com.github.damontecres.wholphin.data.model.BaseItem
 import com.github.damontecres.wholphin.data.model.Person
+import com.github.damontecres.wholphin.data.model.toCastAndCrew
 import com.github.damontecres.wholphin.preferences.UserPreferences
 import com.github.damontecres.wholphin.ui.AspectRatios
 import com.github.damontecres.wholphin.ui.cards.BannerCard
@@ -69,7 +71,6 @@ import com.github.damontecres.wholphin.ui.util.StringStringProvider
 import com.github.damontecres.wholphin.ui.util.rememberDelayedNestedScroll
 import kotlinx.coroutines.launch
 import org.jellyfin.sdk.model.api.MediaSourceInfo
-import org.jellyfin.sdk.model.api.PersonKind
 import kotlin.time.Duration
 
 @Composable
@@ -84,8 +85,9 @@ fun SeriesOverviewContent(
     position: SeriesOverviewPosition,
     firstItemFocusRequester: FocusRequester,
     episodeRowFocusRequester: FocusRequester,
-    castCrewRowFocusRequester: FocusRequester,
+    castRowFocusRequester: FocusRequester,
     guestStarRowFocusRequester: FocusRequester,
+    crewRowFocusRequester: FocusRequester,
     extrasRowFocusRequester: FocusRequester,
     onChangeSeason: (Int) -> Unit,
     onFocusEpisode: (Int) -> Unit,
@@ -342,10 +344,9 @@ fun SeriesOverviewContent(
                 }
             }
 
-            val (guestStars, castAndCrew) =
-                remember(peopleInEpisode) {
-                    peopleInEpisode.partition { it.type == PersonKind.GUEST_STAR }
-                }
+            val context = LocalContext.current
+            val castAndCrew =
+                remember(peopleInEpisode) { peopleInEpisode.toCastAndCrew(context) }
 
             AnimatedVisibility(
                 visible = peopleInEpisode.isNotEmpty(),
@@ -356,26 +357,38 @@ fun SeriesOverviewContent(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    if (castAndCrew.isNotEmpty()) {
-                        PersonRow(
-                            title = R.string.cast_and_crew,
-                            people = castAndCrew,
-                            onClick = personOnClick,
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .focusRequester(castCrewRowFocusRequester),
-                        )
-                    }
-                    if (guestStars.isNotEmpty()) {
+                    // What sets this episode apart comes first; the regular cast is on the series page too
+                    if (castAndCrew.guestStars.isNotEmpty()) {
                         PersonRow(
                             title = R.string.guest_stars,
-                            people = guestStars,
+                            people = castAndCrew.guestStars,
                             onClick = personOnClick,
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
                                     .focusRequester(guestStarRowFocusRequester),
+                        )
+                    }
+                    if (castAndCrew.crew.isNotEmpty()) {
+                        PersonRow(
+                            title = R.string.crew,
+                            people = castAndCrew.crew,
+                            onClick = personOnClick,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(crewRowFocusRequester),
+                        )
+                    }
+                    if (castAndCrew.cast.isNotEmpty()) {
+                        PersonRow(
+                            title = R.string.cast,
+                            people = castAndCrew.cast,
+                            onClick = personOnClick,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(castRowFocusRequester),
                         )
                     }
                 }

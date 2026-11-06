@@ -32,6 +32,7 @@ import com.github.damontecres.wholphin.data.ExtrasItem
 import com.github.damontecres.wholphin.data.model.BaseItem
 import com.github.damontecres.wholphin.data.model.DiscoverItem
 import com.github.damontecres.wholphin.data.model.Person
+import com.github.damontecres.wholphin.data.model.toCastAndCrew
 import com.github.damontecres.wholphin.data.model.Trailer
 import com.github.damontecres.wholphin.preferences.UserPreferences
 import com.github.damontecres.wholphin.services.TrailerService
@@ -279,8 +280,9 @@ fun MovieDetails(
 }
 
 private const val HEADER_ROW = 0
-private const val PEOPLE_ROW = HEADER_ROW + 1
-private const val TRAILER_ROW = PEOPLE_ROW + 1
+private const val CAST_ROW = HEADER_ROW + 1
+private const val CREW_ROW = CAST_ROW + 1
+private const val TRAILER_ROW = CREW_ROW + 1
 private const val CHAPTER_ROW = TRAILER_ROW + 1
 private const val EXTRAS_ROW = CHAPTER_ROW + 1
 private const val SIMILAR_ROW = EXTRAS_ROW + 1
@@ -316,6 +318,10 @@ fun MovieDetailsContent(
     val resumePosition = dto.userData?.playbackPositionTicks?.ticks ?: Duration.ZERO
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val castAndCrew =
+        remember(state.people) {
+            state.people.toCastAndCrew(context).let { it.copy(cast = it.cast + it.guestStars) }
+        }
 
     RequestOrRestoreFocus(focusRequesters.getOrNull(position))
 
@@ -387,22 +393,43 @@ fun MovieDetailsContent(
                     )
                 }
             }
-            state.people.letNotEmpty { people ->
+            castAndCrew.cast.letNotEmpty { people ->
                 item {
                     PersonRow(
+                        title = R.string.cast,
                         people = people,
                         onClick = {
-                            position = PEOPLE_ROW
+                            position = CAST_ROW
                             onClickPerson.invoke(it)
                         },
                         onLongClick = { index, person ->
-                            position = PEOPLE_ROW
+                            position = CAST_ROW
                             onLongClickPerson.invoke(index, person)
                         },
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .focusRequester(focusRequesters[PEOPLE_ROW]),
+                                .focusRequester(focusRequesters[CAST_ROW]),
+                    )
+                }
+            }
+            castAndCrew.crew.letNotEmpty { people ->
+                item {
+                    PersonRow(
+                        title = R.string.crew,
+                        people = people,
+                        onClick = {
+                            position = CREW_ROW
+                            onClickPerson.invoke(it)
+                        },
+                        onLongClick = { index, person ->
+                            position = CREW_ROW
+                            onLongClickPerson.invoke(index, person)
+                        },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .focusRequester(focusRequesters[CREW_ROW]),
                     )
                 }
             }
