@@ -7,11 +7,10 @@ kept in sync with upstream and used day-to-day.** It installs and updates indepe
 official app. Everything after the line below describes the shared upstream project; this part
 lists **every difference from upstream**, with where each one stands upstream.
 
-**Base:** upstream `main` as of 28 Oct 2026 (`v1.0.9` plus the commits merged since, including
-[#2017](https://github.com/damontecres/Wholphin/pull/2017) "convert Dolby Vision profile 7 to 8.1",
-[#2113](https://github.com/damontecres/Wholphin/pull/2113) "playlist details to match library grid"
-and [#2097](https://github.com/damontecres/Wholphin/pull/2097) "change max bitrate during playback"),
-not only its last release.
+**Base:** upstream `main` as of 5 Nov 2026 — release
+[`v1.1.0`](https://github.com/damontecres/Wholphin/releases/tag/v1.1.0) plus
+[#2179](https://github.com/damontecres/Wholphin/pull/2179) "fix adding Seerr server if plugin is not
+installed".
 
 ## What is different from upstream
 
